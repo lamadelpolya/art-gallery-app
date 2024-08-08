@@ -2,13 +2,17 @@
   "name": "file-upload-client",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "daisyui": "^4.12.10",
+    "nodemon": "^3.1.4",
+    "tailwindcss": "^3.4.7"
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && echo '/* /index.html 200' | cat >build/_redirects",
+    "start": "nodemon server.js",
+    "serve": "react-scripts start --open",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject "
   },
   "eslintConfig": {
     "extends": [
@@ -27,5 +31,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "axios": "^1.7.3",
+    "react-router-dom": "^6.26.0"
   }
 }
