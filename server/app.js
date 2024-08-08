@@ -14,9 +14,13 @@ require("./config")(app);
 const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
-// Import and use the auth routes
 const authRoutes = require("./routes/auth.routes");
 app.use("/api/auth", authRoutes);
+const artRoutes = require("./routes/art.routes");
+app.use("/api/artworks", artRoutes);
+
+const collectionRoutes = require("./routes/collection.routes");
+app.use("/api/collections", collectionRoutes);
 
 require("./error-handling")(app);
 
