@@ -21,7 +21,10 @@ app.use("/api/artworks", artRoutes);
 
 const collectionRoutes = require("./routes/collection.routes");
 app.use("/api/collections", collectionRoutes);
-
+const exhibitionRoutes = require("./routes/exhibition.routes");
+app.use("/api/exhibitions", exhibitionRoutes);
+const apiRoutes = require("./routes/apiRoutes");
+app.use("/api", apiRoutes);
 require("./error-handling")(app);
 
 module.exports = app;
