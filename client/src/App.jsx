@@ -1,24 +1,30 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import MainPage from "./pages/MainPage";
 import AboutPage from "./pages/AboutPage";
 import ProfilePage from "./pages/ProfilePage";
 import ArtistDetailPage from "./pages/ArtistDetailPage";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import LoginForm from "./components/Auth/LoginForm";
+import RegisterForm from "./components/Auth/RegisterForm";
 
 function App() {
   return (
     <Router>
       <Navbar />
-      <Switch>
-        <Route path="/" exact component={HomePage} />
-        <Route path="/main" component={MainPage} />
-        <Route path="/about" component={AboutPage} />
-        <Route path="/profile" component={ProfilePage} />
-        <Route path="/artist/:id" component={ArtistDetailPage} />
-      </Switch>
+      <main className="p-4">
+        <Routes>
+          <Route path="/home" element={HomePage} />
+          <Route path="/main" element={MainPage} />
+          <Route path="/about" element={AboutPage} />
+          <Route path="/profile" element={ProfilePage} />
+          <Route path="/artist/:id" element={ArtistDetailPage} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+        </Routes>
+      </main>
       <Footer />
     </Router>
   );
