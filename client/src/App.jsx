@@ -1,25 +1,26 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import AboutPage from "./pages/AboutPage";
 import HomePage from "./pages/HomePage";
-import ArtistDetailPage from "./pages/ArtistDetailPage";
 import MainPage from "./pages/MainPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import AboutPage from "./pages/AboutPage";
 import ProfilePage from "./pages/ProfilePage";
+import ArtistDetailPage from "./pages/ArtistDetailPage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-const App = () => {
+function App() {
   return (
     <Router>
+      <Navbar />
       <Switch>
-        <Route exact path="/home" component={HomePage} />
-        <Route exact path="/" component={MainPage} />
-        <Route exact path="/about" component={AboutPage} />
-        <Route exact path="/artists/:id" component={ArtistDetailPage} />
-        <Route exact path="/profile" component={ProfilePage} />
-        <Route component={NotFoundPage} />
+        <Route path="/" exact component={HomePage} />
+        <Route path="/main" component={MainPage} />
+        <Route path="/about" component={AboutPage} />
+        <Route path="/profile" component={ProfilePage} />
+        <Route path="/artist/:id" component={ArtistDetailPage} />
       </Switch>
+      <Footer />
     </Router>
   );
-};
-
+}
 export default App;
