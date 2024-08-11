@@ -1,78 +1,68 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Art = require("../models/art.model");
-const verifyToken = require("../middleware/auth.middleware");
+const Art = require('../models/art.model');
+const Collection = require('../models/collection.model');
+const Exhibition = require('../models/exhibition.model');
+const User = require('../models/User.model');
 
-router.post("/", verifyToken, async (req, res) => {
-  const { title, description, imageUrl, uploadImage, tags, collection } =
-    req.body;
-  const artist = req.user.id;
-
+// Route to handle artwork submission
+router.post('/submit', async (req, res) => {
+  const { artistInfo, artworks, exhibition } = req.body;
+  router.get('/', async (req, res) => {
+    try {
+      const artworks = await Art.find().populate('artist').exec();
+      res.json(artworks);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch artworks' });
+    }
+  });
   try {
-    const newArt = new Art({
-      title,
-      description,
-      imageUrl,
-      uploadImage,
-      tags,
-      collection,
-      artist,
-    });
-    await newArt.save();
-    res.status(201).json(newArt);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    // Find or create the user
+    let user = await User.findOne({ email: artistInfo.email });
+    if (!user) {
+      user = new User({
+        name: artistInfo.name,
+        email: artistInfo.email,
+        biography: artistInfo.biography,
+        phone: artistInfo.phone,
+      });
+      await user.save();
+    }
 
-router.get("/", async (req, res) => {
-  try {
-    const artworks = await Art.find()
-      .populate("artist", "name email")
-      .populate("collection");
-    res.json(artworks);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    // Save each artwork
+    const savedArtworks = [];
+    for (const artwork of artworks) {
+      const newArt = new Art({
+        title: artwork.title,
+        description: artwork.description,
+        image: artwork.image,
+        artist: user._id,
+      });
+      await newArt.save();
+      savedArtworks.push(newArt._id);
+    }
 
-router.get("/:id", async (req, res) => {
-  try {
-    const artwork = await Art.findById(req.params.id)
-      .populate("artist", "name email")
-      .populate("collection");
-    if (!artwork) return res.status(404).json({ message: "Artwork not found" });
-    res.json(artwork);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    // Optionally, save the exhibition
+    if (exhibition.title) {
+      const newExhibition = new Exhibition({
+        title: exhibition.title,
+        description: exhibition.description,
+        date: exhibition.date,
+        location: exhibition.location,
+        artworks: savedArtworks,
+        artist: user._id,
+      });
+      await newExhibition.save();
+      user.exhibitions.push(newExhibition._id);
+    }
 
-router.put("/:id", verifyToken, async (req, res) => {
-  const { title, description, imageUrl, uploadImage, tags, collection } =
-    req.body;
-  try {
-    const updatedArt = await Art.findByIdAndUpdate(
-      req.params.id,
-      { title, description, imageUrl, uploadImage, tags, collection },
-      { new: true }
-    );
-    if (!updatedArt)
-      return res.status(404).json({ message: "Artwork not found" });
-    res.json(updatedArt);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    // Add artworks to the user's profile
+    user.artworks.push(...savedArtworks);
+    await user.save();
 
-router.delete("/:id", verifyToken, async (req, res) => {
-  try {
-    const deletedArt = await Art.findByIdAndDelete(req.params.id);
-    if (!deletedArt)
-      return res.status(404).json({ message: "Artwork not found" });
-    res.json({ message: "Artwork deleted" });
+    res.status(201).json({ message: 'Artwork submitted successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to submit artwork' });
   }
 });
 

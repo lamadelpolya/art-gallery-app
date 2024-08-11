@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Exhibition = require("../models/exhibition.model");
-const verifyToken  = require("../middleware/auth.middleware");
+const verifyToken = require("../middleware/auth.middleware");
 
 router.post("/", verifyToken, async (req, res) => {
   const { title, description, artworks, startDate, endDate } = req.body;

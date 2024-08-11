@@ -1,36 +1,15 @@
-const { Schema, model } = require("mongoose");
-const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
 
-const userSchema = new Schema(
-  {
-    email: {
-      type: String,
-      required: [true, "Email is required."],
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required."],
-    },
-    name: {
-      type: String,
-      required: [true, "Name is required."],
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  biography: { type: String },
+  phone: { type: String },
+  artworks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Art' }],
+  collections: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Collection' }],
+  exhibitions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Exhibition' }],
 });
 
-const User = model("User", userSchema);
-
+const User = mongoose.model('User', UserSchema);
 module.exports = User;

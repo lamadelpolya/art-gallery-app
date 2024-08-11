@@ -1,23 +1,16 @@
-const mongoose = require("mongoose");
-
-const MONGO_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/art-gallery-app";
+const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/art-gallery-app', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log(
-      `Connected to Mongo! Database name: "${mongoose.connection.name}"`
-    );
+    console.log('MongoDB connected successfully');
   } catch (err) {
-    console.error("Error connecting to MongoDB: ", err);
-    process.exit(1);
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1); // Exit the process with failure
   }
 };
-
-connectDB();
 
 module.exports = connectDB;

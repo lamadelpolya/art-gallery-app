@@ -1,19 +1,13 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require('mongoose');
 
-const exhibitionSchema = new Schema(
-  {
-    title: { type: String, required: true },
-    description: { type: String },
-    date: { type: Date, required: true },
-    collections: [{ type: Schema.Types.ObjectId, ref: "Collection" }],
-    artist: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  },
-  {
-    timestamps: true,
-  }
-);
+const ExhibitionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  date: { type: Date, required: true },
+  location: { type: String, required: true },
+  artworks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Art' }],
+  artist: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+});
 
-const Exhibition = model("Exhibition", exhibitionSchema);
-
+const Exhibition = mongoose.model('Exhibition', ExhibitionSchema);
 module.exports = Exhibition;
-

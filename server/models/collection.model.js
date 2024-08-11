@@ -1,32 +1,11 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require('mongoose');
 
-const collectionSchema = new Schema(
-  {
-    title: {
-      type: String,
-      required: [true, 'Title is required.']
-    },
-    description: {
-      type: String,
-      required: [true, 'Description is required.']
-    },
-    artist: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    artworks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Art'
-      }
-    ]
-  },
-  {
-    timestamps: true
-  }
-);
+const CollectionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  artworks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Art' }],
+  artist: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+});
 
-const Collection = model("Collection", collectionSchema);
-
+const Collection = mongoose.model('Collection', CollectionSchema);
 module.exports = Collection;

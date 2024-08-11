@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Collection = require('../models/collection.model');
-const  verifyToken  = require('../middleware/auth.middleware');
+const verifyToken = require('../middleware/auth.middleware');
 
 router.post('/', verifyToken, async (req, res) => {
   const { title, description, artworks } = req.body;
@@ -57,4 +57,3 @@ router.delete('/:id', verifyToken, async (req, res) => {
 });
 
 module.exports = router;
-
