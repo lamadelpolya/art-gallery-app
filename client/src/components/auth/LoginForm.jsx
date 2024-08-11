@@ -1,4 +1,3 @@
-// src/components/Auth/LoginForm.jsx
 import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -7,23 +6,26 @@ import { loginUser } from "../../api/api";
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
     const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null); // Clear previous error
         try {
-            const userData = await loginUser(email, password);
+            const userData = await loginUser({ email, password });
             setAuth({ isAuthenticated: true, user: userData });
-            navigate('/home'); // Navigate to home or dashboard after successful login
+            navigate('/main'); // Navigate to home or dashboard after successful login
         } catch (error) {
-            console.error("Login failed:", error);
+            setError("Invalid email or password. Please try again.");
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="form-container bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-6">Login</h2>
+            {error && <div className="text-red-500 mb-4">{error}</div>}
             <input
                 type="email"
                 name="email"

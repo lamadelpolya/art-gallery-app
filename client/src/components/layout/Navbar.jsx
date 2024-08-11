@@ -1,7 +1,25 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 const Navbar = forwardRef(({ toggleSidebar }, ref) => {
+  const [inputValue, setInputValue] = useState('');
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      navigate(`/search?q=${inputValue}`);
+      setInputValue(''); // Clear the search input after submission
+      setIsSearchVisible(false); // Hide the search bar after submission
+    }
+  };
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
   return (
     <nav
       ref={ref}
@@ -35,19 +53,13 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to="/main">
-                  Main
-                </Link>
+                <Link to="/main">Main</Link>
               </li>
               <li>
-                <Link to="/about">
-                  About
-                </Link>
+                <Link to="/about">About</Link>
               </li>
               <li>
-                <Link to="/profile" >
-                  Profile
-                </Link>
+                <Link to="/profile">Profile</Link>
               </li>
             </ul>
           </div>
@@ -55,8 +67,9 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
         <div className="navbar-center">
           <a className="btn btn-ghost text-xl">ARTRA</a>
         </div>
-        <div className="navbar-end">
-          <button className="btn btn-ghost btn-circle">
+        <div className="navbar-end flex items-center">
+          {/* Search Bar Toggle Button */}
+          <button onClick={toggleSearchBar} className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -72,6 +85,19 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
               />
             </svg>
           </button>
+          {/* Conditional Rendering of the Search Bar */}
+          {isSearchVisible && (
+            <form onSubmit={handleSearchSubmit} className="form-inline ml-4">
+              <input
+                type="text"
+                className="input input-bordered"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Search for artists, artworks..."
+              />
+              <button type="submit" className="btn btn-primary ml-2">Search</button>
+            </form>
+          )}
           <button className="btn btn-ghost btn-circle">
             <div className="indicator">
               <svg
