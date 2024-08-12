@@ -24,11 +24,13 @@ module.exports = (app) => {
   // controls a very specific header to pass headers from the frontend
   app.use(
     cors({
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "Access-Control-Allow-Origin",
-      ],
+      // allowedHeaders: [
+      //   "Content-Type",
+      //   "Authorization",
+      //   "Access-Control-Allow-Origin",
+        
+      // ],
+      exposedHeaders:["Authorization"],
       credentials: true,
       origin: [FRONTEND_URL],
     })
