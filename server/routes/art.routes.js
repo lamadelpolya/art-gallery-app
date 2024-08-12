@@ -1,21 +1,38 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Art = require('../models/art.model');
-const Collection = require('../models/collection.model');
-const Exhibition = require('../models/exhibition.model');
-const User = require('../models/User.model');
+const Art = require("../models/art.model");
+const Collection = require("../models/collection.model");
+const Exhibition = require("../models/exhibition.model");
+const User = require("../models/User.model");
+router.get("/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    const artworks = await Art.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+        { artistName: { $regex: query, $options: "i" } }, // Assuming you store artist name in the artwork model
+      ],
+    });
+    res.json(artworks);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to search artworks" });
+  }
+});
+// Route to fetch all artworks
+router.get("/artworks", async (req, res) => {
+  try {
+    const artworks = await Art.find().populate("artist").exec();
+    res.json(artworks);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch artworks" });
+  }
+});
 
 // Route to handle artwork submission
-router.post('/submit', async (req, res) => {
+router.post("/submit", async (req, res) => {
   const { artistInfo, artworks, exhibition } = req.body;
-  router.get('/', async (req, res) => {
-    try {
-      const artworks = await Art.find().populate('artist').exec();
-      res.json(artworks);
-    } catch (err) {
-      res.status(500).json({ error: 'Failed to fetch artworks' });
-    }
-  });
+
   try {
     // Find or create the user
     let user = await User.findOne({ email: artistInfo.email });
@@ -43,7 +60,7 @@ router.post('/submit', async (req, res) => {
     }
 
     // Optionally, save the exhibition
-    if (exhibition.title) {
+    if (exhibition && exhibition.title) {
       const newExhibition = new Exhibition({
         title: exhibition.title,
         description: exhibition.description,
@@ -60,9 +77,14 @@ router.post('/submit', async (req, res) => {
     user.artworks.push(...savedArtworks);
     await user.save();
 
-    res.status(201).json({ message: 'Artwork submitted successfully' });
+    res
+      .status(201)
+      .json({
+        message: "Artwork submitted successfully",
+        artworks: savedArtworks,
+      });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to submit artwork' });
+    res.status(500).json({ error: "Failed to submit artwork" });
   }
 });
 

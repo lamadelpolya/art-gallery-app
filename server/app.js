@@ -8,9 +8,18 @@ const connectDB = require('./db'); // Import the connection module
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
+// Updated CORS setup in your Express server
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow PUT, DELETE, and OPTIONS methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+}));
+
+// Handle preflight requests for all routes
+app.options('*', cors()); 
 
 // Connect to MongoDB
 connectDB(); // Use the function to connect to MongoDB
