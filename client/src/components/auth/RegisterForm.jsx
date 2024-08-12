@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PasswordErrorMessage = () => {
-  return <p className="text-red-500 text-sm mt-1">Password should have at least 8 characters</p>;
+  return (
+    <p className="text-red-500 text-sm mt-1">
+      Password should have at least 8 characters
+    </p>
+  );
 };
 
 function RegistrationForm() {
@@ -41,29 +45,25 @@ function RegistrationForm() {
     setRole("role");
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5005/api/auth/register", {
+        mode:'no-cors',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: `${firstName} ${lastName}`,
-          email: email,
-          password: password.value,
-          role: role,
-        }),
       });
 
       if (!response.ok) {
-        throw new Error('Registration failed');
+        throw new Error("Registration failed");
       }
 
       alert("Account created successfully!");
       clearForm();
-      navigate('/login'); // Navigate to login page after registration
+      navigate("/login"); // Navigate to login page after registration
     } catch (error) {
       setError(error.message);
     }
@@ -71,9 +71,14 @@ function RegistrationForm() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+      >
         <fieldset>
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Sign Up</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+            Sign Up
+          </h2>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2">
               First name <sup className="text-red-500">*</sup>
@@ -89,7 +94,9 @@ function RegistrationForm() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Last name</label>
+            <label className="block text-gray-700 font-bold mb-2">
+              Last name
+            </label>
             <input
               value={lastName}
               onChange={(e) => {
