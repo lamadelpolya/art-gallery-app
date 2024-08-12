@@ -66,7 +66,7 @@ const ArtistSubmissionForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5005/api/arts', {
+      const response = await axios.post('http://localhost:27017/art-gallery-app.artworks', {
         artistInfo,
         artworks,
         exhibition,

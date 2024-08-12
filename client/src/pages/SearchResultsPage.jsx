@@ -1,56 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import ArtworkCard from '../components/artworks/ArtworkCard';
 
-const SearchResultsPage = ({ searchQuery }) => {
-    const [results, setResults] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+const SearchResultsPage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [artist, setArtist] = useState('');
+  const [medium, setMedium] = useState('');
+  const [priceRange, setPriceRange] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchSearchResults = async () => {
-            try {
-                const token = await getArtsyToken();
-                const response = await axios.get('https://api.artsy.net/api/search', {
-                    headers: {
-                        'X-Xapp-Token': token,
-                    },
-                    params: {
-                        q: searchQuery,
-                    },
-                });
-                setResults(response.data._embedded.results);
-            } catch (error) {
-                console.error('Error fetching search results:', error);
-                setError('Failed to load search results. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (searchQuery) {
-            fetchSearchResults();
-        }
-    }, [searchQuery]);
-
-    if (loading) {
-        return <div className="container mx-auto mt-8">Loading...</div>;
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:5005/api/search', {
+        params: { query: searchQuery, artist, medium, priceRange }
+      });
+      setResults(response.data);
+    } catch (error) {
+      console.error('Error searching:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (error) {
-        return <div className="container mx-auto mt-8 text-red-500">{error}</div>;
-    }
+  return (
+    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-3xl font-bold mb-6">Search Results</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+        />
+        <input
+          type="text"
+          placeholder="Artist"
+          value={artist}
+          onChange={(e) => setArtist(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+        />
+        <input
+          type="text"
+          placeholder="Medium"
+          value={medium}
+          onChange={(e) => setMedium(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+        />
+        <input
+          type="text"
+          placeholder="Price Range"
+          value={priceRange}
+          onChange={(e) => setPriceRange(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+        />
+      </div>
+      <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded mb-8">Search</button>
 
-    return (
-        <div className="container mx-auto mt-8">
-            <h2 className="text-3xl font-bold mb-4">Search Results for "{searchQuery}"</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {results.map(result => (
-                    <ArtworkCard key={result.id} artwork={result} />
-                ))}
-            </div>
-        </div>
-    );
+      {loading && <div>Loading...</div>}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {results.map((result) => (
+          <ArtworkCard key={result.id || result._id} artwork={result} />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default SearchResultsPage;
