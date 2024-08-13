@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 const UserProfilePage = () => {
   const [userInfo, setUserInfo] = useState({
-    name: '',
-    email: '',
-    biography: '',
-    phone: '',
+    name: "",
+    email: "",
+    biography: "",
+    phone: "",
   });
+  const { auth, setAuth } = useContext(AuthContext); // Accessing auth from AuthContext
+
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,23 +18,32 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/users', {
+        const response = await fetch("http://localhost:5005/api/auth/users", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you're using JWT tokens
+            Authorization: `Bearer ${auth.token}`,
+            mode: "no-cors",
           },
         });
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
         const data = await response.json();
-        setUserInfo(data.userInfo);
-        setArtworks(data.artworks);
-        setLoading(false);
+        console.log(data);
+        setAuth((prev) => ({
+          ...prev,
+          isAuthenticated: true,
+          user: data,
+        }));
       } catch (error) {
-        setError('Error fetching user profile data');
+        console.error("Error during auth check:", error);
+        setAuth({ isAuthenticated: false, user: null, token: null });
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [auth.token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,26 +56,27 @@ const UserProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
+      const response = await fetch("/api/profile", {
+        mode: "no-cors",
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(userInfo),
       });
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
-      alert('Profile updated successfully!');
+      alert("Profile updated successfully!");
     } catch (error) {
-      setError('Error updating profile');
+      setError("Error updating profile");
     }
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-
+  console.log(auth);
   return (
     <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-4">User Profile</h1>
@@ -76,7 +89,7 @@ const UserProfilePage = () => {
             <input
               type="text"
               name="name"
-              value={userInfo.name}
+              value={auth?.user?.name}
               onChange={handleInputChange}
               className="border p-2 w-full"
             />

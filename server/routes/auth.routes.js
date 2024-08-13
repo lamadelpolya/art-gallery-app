@@ -4,17 +4,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
 const router = express.Router();
 
-// Register a new user
-// router.post("/register", async (req, res) => {
-//   const { name, email, password, role } = req.body;
-
-//   // Check if the body is correctly parsed
-//   if (!name || !email || !password || !role) {
-//     console.log("Missing fields:", { name, email, password, role });
-//     return res.status(400).json({ message: "Please enter all fields" });
-//   }
 router.post("/register", async (req, res) => {
-  console.log("Received data:", req.body);  // Check if data is correctly parsed
+  console.log("Received data:", req.body); // Check if data is correctly parsed
 
   const { name, email, password, role } = req.body;
 
@@ -22,11 +13,6 @@ router.post("/register", async (req, res) => {
     console.log("Missing fields:", { name, email, password, role });
     return res.status(400).json({ message: "Please enter all fields" });
   }
-
-  // Proceed with registration logic
-
-
-  // Your existing registration logic here
 
   try {
     let foundUser = await User.findOne({ email });
