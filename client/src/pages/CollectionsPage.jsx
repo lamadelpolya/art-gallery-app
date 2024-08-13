@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
@@ -9,8 +8,8 @@ const CollectionsPage = () => {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const response = await axios.get('http://localhost:5005/api/collections');
-        setCollections(response.data);
+        const response = await axios.get('https://api.artic.edu/api/v1/artworks');
+        setCollections(response.data.data); // Adjust to access the data array properly
       } catch (error) {
         console.error('Error fetching collections:', error);
       } finally {
@@ -29,10 +28,14 @@ const CollectionsPage = () => {
       <h1 className="text-3xl font-bold mb-6">Collections</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {collections.map((collection) => (
-          <div key={collection._id} className="bg-gray-100 p-4 rounded-lg shadow-md">
+          <div key={collection.id} className="bg-gray-100 p-4 rounded-lg shadow-md">
+            <img 
+              src={`https://www.artic.edu/iiif/2/${collection.image_id}/full/843,/0/default.jpg`} 
+              alt={collection.title} 
+              className="w-full h-48 object-cover rounded-md mb-4"
+            />
             <h3 className="text-xl font-bold mb-2">{collection.title}</h3>
-            <p className="text-gray-700 mb-4">{collection.description}</p>
-            <Link to={`/collections/${collection._id}`} className="text-blue-500">View Collection</Link>
+            <p className="text-gray-700 mb-4">{collection.artist_title}</p>
           </div>
         ))}
       </div>

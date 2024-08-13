@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const ArtistSubmissionForm = () => {
   const [step, setStep] = useState(1);
   const [artistInfo, setArtistInfo] = useState({
-    name: '',
-    biography: '',
-    email: '',
-    phone: '',
+    name: "",
+    biography: "",
+    email: "",
+    phone: "",
   });
   const [artworks, setArtworks] = useState([]);
   const [exhibition, setExhibition] = useState({
-    title: '',
-    description: '',
-    date: '',
-    location: '',
+    title: "",
+    description: "",
+    date: "",
+    location: "",
   });
 
   // Handle artist information input
@@ -38,7 +38,7 @@ const ArtistSubmissionForm = () => {
   };
 
   const handleAddArtwork = () => {
-    setArtworks([...artworks, { title: '', description: '', image: '' }]);
+    setArtworks([...artworks, { title: "", description: "", image: "" }]);
   };
 
   const handleRemoveArtwork = (index) => {
@@ -66,17 +66,25 @@ const ArtistSubmissionForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:27017/art-gallery-app.artworks', {
-        artistInfo,
-        artworks,
-        exhibition,
-      });
-      console.log('Artwork submitted successfully:', response.data);
+      const response = await axios.post(
+        "http://localhost:5005/api/artworks",
+        {
+          artistInfo,
+          artworks,
+          exhibition,
+        },
+        {
+          headers: {
+            authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      console.log("Artwork submitted successfully:", response.data);
       // Redirect or show success message after submission
-      alert('Artwork submitted successfully!');
+      alert("Artwork submitted successfully!");
     } catch (error) {
-      console.error('Error submitting artwork:', error);
-      alert('Failed to submit artwork. Please try again.');
+      console.error("Error submitting artwork:", error);
+      alert("Failed to submit artwork. Please try again.");
     }
   };
 
@@ -85,9 +93,13 @@ const ArtistSubmissionForm = () => {
       <form onSubmit={handleSubmit}>
         {step === 1 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Step 1: Artist Information</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Step 1: Artist Information
+            </h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -98,7 +110,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Biography</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Biography
+              </label>
               <textarea
                 name="biography"
                 value={artistInfo.biography}
@@ -108,7 +122,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -119,7 +135,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
               <input
                 type="tel"
                 name="phone"
@@ -129,7 +147,11 @@ const ArtistSubmissionForm = () => {
                 required
               />
             </div>
-            <button type="button" onClick={handleNextStep} className="btn btn-primary">
+            <button
+              type="button"
+              onClick={handleNextStep}
+              className="btn btn-primary"
+            >
               Next
             </button>
           </div>
@@ -137,12 +159,16 @@ const ArtistSubmissionForm = () => {
 
         {step === 2 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Step 2: Artwork Submission</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Step 2: Artwork Submission
+            </h2>
             {artworks.map((artwork, index) => (
               <div key={index} className="mb-4">
                 <h3 className="text-xl font-semibold">Artwork {index + 1}</h3>
                 <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Title</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Title
+                  </label>
                   <input
                     type="text"
                     name="title"
@@ -153,7 +179,9 @@ const ArtistSubmissionForm = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
                   <textarea
                     name="description"
                     value={artwork.description}
@@ -163,7 +191,9 @@ const ArtistSubmissionForm = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Image URL</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Image URL
+                  </label>
                   <input
                     type="url"
                     name="image"
@@ -173,19 +203,35 @@ const ArtistSubmissionForm = () => {
                     required
                   />
                 </div>
-                <button type="button" onClick={() => handleRemoveArtwork(index)} className="btn btn-danger">
+                <button
+                  type="button"
+                  onClick={() => handleRemoveArtwork(index)}
+                  className="btn btn-danger"
+                >
                   Remove Artwork
                 </button>
               </div>
             ))}
-            <button type="button" onClick={handleAddArtwork} className="btn btn-secondary mb-4">
+            <button
+              type="button"
+              onClick={handleAddArtwork}
+              className="btn btn-secondary mb-4"
+            >
               Add Artwork
             </button>
             <div className="flex justify-between">
-              <button type="button" onClick={handlePreviousStep} className="btn btn-secondary">
+              <button
+                type="button"
+                onClick={handlePreviousStep}
+                className="btn btn-secondary"
+              >
                 Back
               </button>
-              <button type="button" onClick={handleNextStep} className="btn btn-primary">
+              <button
+                type="button"
+                onClick={handleNextStep}
+                className="btn btn-primary"
+              >
                 Next
               </button>
             </div>
@@ -194,9 +240,13 @@ const ArtistSubmissionForm = () => {
 
         {step === 3 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Step 3: Exhibition Creation (Optional)</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Step 3: Exhibition Creation (Optional)
+            </h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Exhibition Title</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Exhibition Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -206,7 +256,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
               <textarea
                 name="description"
                 value={exhibition.description}
@@ -215,7 +267,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Date</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Date
+              </label>
               <input
                 type="date"
                 name="date"
@@ -225,7 +279,9 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Location</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Location
+              </label>
               <input
                 type="text"
                 name="location"
@@ -235,7 +291,11 @@ const ArtistSubmissionForm = () => {
               />
             </div>
             <div className="flex justify-between">
-              <button type="button" onClick={handlePreviousStep} className="btn btn-secondary">
+              <button
+                type="button"
+                onClick={handlePreviousStep}
+                className="btn btn-secondary"
+              >
                 Back
               </button>
               <button type="submit" className="btn btn-primary">
