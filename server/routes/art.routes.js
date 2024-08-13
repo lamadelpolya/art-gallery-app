@@ -4,6 +4,7 @@ const Art = require("../models/art.model");
 const Collection = require("../models/collection.model");
 const Exhibition = require("../models/exhibition.model");
 const User = require("../models/User.model");
+const authMiddleware = require("../middleware/auth.middleware");
 router.get("/search", async (req, res) => {
   try {
     const { query } = req.query;
@@ -30,21 +31,21 @@ router.get("/artworks", async (req, res) => {
 });
 
 // Route to handle artwork submission
-router.post("/submit", async (req, res) => {
+router.post("/artworks", authMiddleware, async (req, res) => {
   const { artistInfo, artworks, exhibition } = req.body;
-
+  console.log(req.user);
   try {
     // Find or create the user
-    let user = await User.findOne({ email: artistInfo.email });
-    if (!user) {
-      user = new User({
-        name: artistInfo.name,
-        email: artistInfo.email,
-        biography: artistInfo.biography,
-        phone: artistInfo.phone,
-      });
-      await user.save();
-    }
+    // let user = await User.findOne({ email: artistInfo.email });
+    // if (!user) {
+    //   user = new User({
+    //     name: artistInfo.name,
+    //     email: artistInfo.email,
+    //     biography: artistInfo.biography,
+    //     phone: artistInfo.phone,
+    //   });
+    //   await user.save();
+    // }
 
     // Save each artwork
     const savedArtworks = [];
@@ -53,7 +54,7 @@ router.post("/submit", async (req, res) => {
         title: artwork.title,
         description: artwork.description,
         image: artwork.image,
-        artist: user._id,
+        artist: req.user.id,
       });
       await newArt.save();
       savedArtworks.push(newArt._id);
@@ -64,26 +65,25 @@ router.post("/submit", async (req, res) => {
       const newExhibition = new Exhibition({
         title: exhibition.title,
         description: exhibition.description,
-        date: exhibition.date,
+        date: exhibition.date || new Date(),
         location: exhibition.location,
         artworks: savedArtworks,
-        artist: user._id,
+        artist: req.user.id,
       });
       await newExhibition.save();
-      user.exhibitions.push(newExhibition._id);
+      // user.exhibitions.push(newExhibition._id);
     }
 
     // Add artworks to the user's profile
-    user.artworks.push(...savedArtworks);
-    await user.save();
+    // user.artworks.push(...savedArtworks);
+    // await user.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Artwork submitted successfully",
-        artworks: savedArtworks,
-      });
+    res.status(201).json({
+      message: "Artwork submitted successfully",
+      artworks: savedArtworks,
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to submit artwork" });
   }
 });

@@ -16,7 +16,7 @@ app.use(express.json()); // This also parses JSON bodies
 require("./config")(app);
 
 // Routes
-app.use("/api/artworks", require("./routes/art.routes"));
+app.use("/api", require("./routes/art.routes"));
 app.use("/api", require("./routes/index.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/auth", require("./routes/user.routes"));
