@@ -9,10 +9,10 @@ const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
-const MONGO_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 // Connect to MongoDB using Mongoose
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 

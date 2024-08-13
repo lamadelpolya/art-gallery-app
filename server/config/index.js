@@ -28,9 +28,9 @@ module.exports = (app) => {
       //   "Content-Type",
       //   "Authorization",
       //   "Access-Control-Allow-Origin",
-        
+
       // ],
-      exposedHeaders:["Authorization"],
+      exposedHeaders: ["Authorization"],
       credentials: true,
       origin: [FRONTEND_URL],
     })
@@ -41,6 +41,6 @@ module.exports = (app) => {
 
   // To have access to `body` property in the request
   app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 };
