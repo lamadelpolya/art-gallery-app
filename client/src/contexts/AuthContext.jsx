@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -7,22 +7,27 @@ export function AuthProvider({ children }) {
   const [auth, setAuth] = useState({
     isAuthenticated: false,
     user: null,
-    token: localStorage.getItem('token'),
+    token: localStorage.getItem("token"),
   });
 
   useEffect(() => {
     const checkAuth = async () => {
       if (auth.token) {
         try {
-          const response = await axios.get('/api/auth/check', {
+          const response = await axios.get("http://localhost:5005/api/users", {
+            // Updated URL
             headers: {
-              Authorization: `Bearer ${auth.token}`
-            }
+              Authorization: `Bearer ${auth.token}`,
+            },
           });
-          setAuth((prev) => ({ ...prev, isAuthenticated: true, user: response.data }));
+          setAuth((prev) => ({
+            ...prev,
+            isAuthenticated: true,
+            user: response.data,
+          }));
         } catch (error) {
           setAuth({ isAuthenticated: false, user: null, token: null });
-          localStorage.removeItem('token');
+          //localStorage.removeItem('token');
         }
       }
     };
@@ -35,7 +40,7 @@ export function AuthProvider({ children }) {
       user: userData,
       token,
     });
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
   };
 
   const logout = () => {
@@ -44,7 +49,7 @@ export function AuthProvider({ children }) {
       user: null,
       token: null,
     });
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
   };
 
   return (
