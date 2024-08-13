@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_LOCAL_API_URL;
+
 const PasswordErrorMessage = () => {
   return (
     <p className="text-red-500 text-sm mt-1">
@@ -10,8 +12,7 @@ const PasswordErrorMessage = () => {
 };
 
 function RegistrationForm() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState({
     value: "",
@@ -27,7 +28,7 @@ function RegistrationForm() {
 
   const getIsFormValid = () => {
     return (
-      firstName &&
+      name &&
       validateEmail(email) &&
       password.value.length >= 8 &&
       role !== "role"
@@ -35,8 +36,7 @@ function RegistrationForm() {
   };
 
   const clearForm = () => {
-    setFirstName("");
-    setLastName("");
+    setName("");
     setEmail("");
     setPassword({
       value: "",
@@ -44,21 +44,25 @@ function RegistrationForm() {
     });
     setRole("role");
   };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5005/api/auth/register", {
-        mode:'no-cors',
+      const response = await fetch(`/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          name,
+          email,
+          password: password.value,
+          role,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Registration failed");
+        const errorData = await response.json(); // Extract the error message
+        throw new Error(errorData.error || "Registration failed");
       }
 
       alert("Account created successfully!");
@@ -81,29 +85,16 @@ function RegistrationForm() {
           </h2>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2">
-              First name <sup className="text-red-500">*</sup>
+              Name <sup className="text-red-500">*</sup>
             </label>
             <input
-              value={firstName}
+              value={name}
               onChange={(e) => {
-                setFirstName(e.target.value);
+                setName(e.target.value);
               }}
-              placeholder="First name"
+              placeholder="Name"
               className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
               required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Last name
-            </label>
-            <input
-              value={lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-              }}
-              placeholder="Last name"
-              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">

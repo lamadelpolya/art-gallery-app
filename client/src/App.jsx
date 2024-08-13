@@ -5,11 +5,10 @@ import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/AboutPage";
 import UserProfile from './pages/UserProfilePage';
 import ArtistSubmissionForm from '../src/components/artworks/ArtistSubmissionForm'
-import ArtistDetailPage from "./pages/ArtistDetailPage";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
-import LoginForm from "./components/Auth/LoginForm";
-import RegisterForm from "./components/Auth/RegisterForm";
+import LoginForm from "./components/auth/LoginForm";
+import RegisterForm from "./components/auth/RegisterForm";
 import NotFoundPage from "./pages/NotFoundPage";
 import AboutUsPage from './pages/AboutUs';
 import SearchResultsPage from './pages/SearchResultsPage';
