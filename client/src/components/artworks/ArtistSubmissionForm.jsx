@@ -28,27 +28,17 @@ const ArtistSubmissionForm = () => {
 
   // Handle artwork submission
   const handleArtworkChange = (index, e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     const newArtworks = [...artworks];
-
-    if (name === "file") {
-      // If the input is a file, store the file itself
-      newArtworks[index] = {
-        ...newArtworks[index],
-        file: files[0], // Store the file object
-      };
-    } else {
-      newArtworks[index] = {
-        ...newArtworks[index],
-        [name]: value,
-      };
-    }
-
+    newArtworks[index] = {
+      ...newArtworks[index],
+      [name]: value,
+    };
     setArtworks(newArtworks);
   };
 
   const handleAddArtwork = () => {
-    setArtworks([...artworks, { title: "", description: "", file: null }]);
+    setArtworks([...artworks, { title: "", description: "", image: "" }]);
   };
 
   const handleRemoveArtwork = (index) => {
@@ -75,40 +65,22 @@ const ArtistSubmissionForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-
-    // Append artist info to form data
-    for (let key in artistInfo) {
-      formData.append(`artistInfo[${key}]`, artistInfo[key]);
-    }
-
-    // Append exhibition info to form data
-    for (let key in exhibition) {
-      formData.append(`exhibition[${key}]`, exhibition[key]);
-    }
-
-    // Append artworks to form data
-    artworks.forEach((artwork, index) => {
-      formData.append(`artworks[${index}][title]`, artwork.title);
-      formData.append(`artworks[${index}][description]`, artwork.description);
-      if (artwork.file) {
-        formData.append(`artworks[${index}][image]`, artwork.file);
-      }
-    });
-
     try {
       const response = await axios.post(
         "http://localhost:5005/api/artworks",
-        formData,
+        {
+          artistInfo,
+          artworks,
+          exhibition,
+        },
         {
           headers: {
-            "Content-Type": "multipart/form-data", // This is important for file uploads
             authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
       console.log("Artwork submitted successfully:", response.data);
+      // Redirect or show success message after submission
       alert("Artwork submitted successfully!");
     } catch (error) {
       console.error("Error submitting artwork:", error);
@@ -219,15 +191,12 @@ const ArtistSubmissionForm = () => {
                   />
                 </div>
                 <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Image
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Image</label>
                   <input
                     type="file"
                     name="file"
                     onChange={(e) => handleArtworkChange(index, e)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
+                    className="file-input file-input-bordered w-full max-w-xs"                     required
                   />
                 </div>
                 <button

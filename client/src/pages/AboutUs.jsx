@@ -3,7 +3,7 @@ import React from "react";
 const AboutUsPage = () => {
   return (
     <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-4xl font-bold mb-8">About Us</h1>
+      <h1 className="text-8xl text-center text-pallette-1 font-medium mb-8">About Us</h1>
 
       <section className="mb-12 flex flex-col md:flex-row items-center">
         <div className="md:w-1/3 mb-6 md:mb-0">
