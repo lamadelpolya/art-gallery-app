@@ -17,6 +17,8 @@ import ArtworkDetailPage from "./pages/ArtworkDetailPage";
 import CollectionsPage from "./pages/CollectionsPage";
 import ExhibitionsPage from "./pages/ExhibitionPage";
 import UserDashboard from "./pages/UserDashboard";
+import AddArtwork from "./components/artworks/AddArtwork";
+
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,10 +29,11 @@ function App() {
       <main className="p-4">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/artworks/add" element={<AddArtwork />} />
           <Route path="/main" element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/edit-profile" element={EditProfilePage} />
+          <Route path="/edit-profile" element={<EditProfilePage/>} />
           <Route path="/submit-art" element={<ArtistSubmissionForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate instead of useHistory
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
 const UserProfilePage = () => {
@@ -7,11 +7,12 @@ const UserProfilePage = () => {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if(!auth.token) throw new Error("token must be provided")
         const response = await fetch("http://localhost:5005/api/auth/users", {
           headers: {
             Authorization: `Bearer ${auth.token}`,
@@ -26,8 +27,21 @@ const UserProfilePage = () => {
           isAuthenticated: true,
           user: data,
         }));
+
+        // Fetch the user's artworks
+        const artworksResponse = await fetch("http://localhost:5005/api/artworks", {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+        if (!artworksResponse.ok) {
+          throw new Error("Failed to fetch artworks");
+        }
+        const artworksData = await artworksResponse.json();
+        setArtworks(artworksData);
+
       } catch (error) {
-        console.error("Error during auth check:", error);
+        console.error("Error during auth check or fetching artworks:", error);
         setAuth({ isAuthenticated: false, user: null, token: null });
       } finally {
         setLoading(false);
@@ -54,7 +68,7 @@ const UserProfilePage = () => {
 
       <div className="flex justify-end">
         <button
-          onClick={() => navigate("/edit-profile")} // Use navigate instead of history.push
+          onClick={() => navigate("/edit-profile")}
           className="btn btn-secondary"
         >
           Edit Profile

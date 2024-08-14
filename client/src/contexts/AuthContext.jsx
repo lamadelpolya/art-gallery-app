@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
     const checkAuth = async () => {
       if (auth.token) {
         try {
-          const response = await axios.get("http://localhost:5005/api/users", {
+          const response = await axios.get("http://localhost:5005/api/auth/users", {
             // Updated URL
             headers: {
               Authorization: `Bearer ${auth.token}`,
