@@ -5,13 +5,13 @@ const { Schema, model } = mongoose;
 
 const artworkSchema = new Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String },
     description: { type: String },
-    imageUrl: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true } // Assuming artworks are linked to a user
+    imageUrl: { type: String },
+    // user: { type: Schema.Types.ObjectId, ref: 'User', required: true } // Assuming artworks are linked to a user
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
