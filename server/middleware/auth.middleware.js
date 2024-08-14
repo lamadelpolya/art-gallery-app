@@ -1,7 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
+  let token = "";
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.replace("Bearer ", "");
+  }
   console.log("tokennnnn", token);
   if (!token) {
     console.log("no token");

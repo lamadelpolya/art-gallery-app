@@ -5,6 +5,23 @@ const Collection = require("../models/collection.model");
 const Exhibition = require("../models/exhibition.model");
 const User = require("../models/User.model");
 const authMiddleware = require("../middleware/auth.middleware");
+const fileUploader = require("../config/cloudinary.config");
+const Artwork = require("../models/art.model");
+router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  
+  // Send back the URL of the uploaded file
+  res.json({ fileUrl: req.file.path });
+});
+router.post('/artworks', (req, res, next) => {
+  Artwork.create(req.body)
+    .then(createdArtwork => res.status(200).json(createdArtwork))
+    .catch(err => next(err));
+});
+
 router.get("/search", async (req, res) => {
   try {
     const { query } = req.query;
@@ -21,14 +38,7 @@ router.get("/search", async (req, res) => {
   }
 });
 // Route to fetch all artworks
-router.get("/artworks", async (req, res) => {
-  try {
-    const artworks = await Art.find().populate("artist").exec();
-    res.json(artworks);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch artworks" });
-  }
-});
+
 
 // Route to handle artwork submission
 router.post("/artworks", authMiddleware, async (req, res) => {
