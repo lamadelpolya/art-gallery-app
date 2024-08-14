@@ -1,78 +1,53 @@
 import React, { useEffect, useState } from "react";
-import ArtworkCard from "../components/artworks/ArtworkCard";
-import { getArtsyToken } from "../../../server/api/api";
 import axios from "axios";
 
 function MainPage() {
   const [artworks, setArtworks] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const fetchArtsyArtworks = async () => {
+    const fetchArtworks = async () => {
       try {
-        const token = await getArtsyToken();
-        const response = await axios.get("https://api.artsy.net/api/artworks", {
-          headers: {
-            "X-Xapp-Token": token,
-          },
-        });
-        console.log(
-          "Artsy artworks fetched successfully:",
-          response.data._embedded.artworks
+        const response = await axios.get(
+          "https://api.artic.edu/api/v1/artworks?page=4"
         );
-        return response.data._embedded.artworks;
+        return response.data.data;
       } catch (error) {
-        console.error("Error fetching artworks from Artsy:", error);
-        return []; // Return an empty array if there is an error
+        console.error("Error fetching artworks from API:", error);
+        return [];
       }
     };
 
-    const fetchLocalArtworks = async () => {
+    const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5005/api/artworks");
-        console.log("Local artworks fetched successfully:", response.data);
-        return response.data; // Adjust based on the structure of your response
+        const response = await axios.get("https://api.artic.edu/api/v1/events");
+        return response.data.data;
       } catch (error) {
-        console.error("Error fetching artworks from local API:", error);
-        return []; // Return an empty array if there is an error
+        console.error("Error fetching events:", error);
+        return [];
       }
     };
 
-    const fetchAllArtworks = async () => {
+    const fetchAllData = async () => {
       setLoading(true);
       try {
-        const [artsyArtworks, localArtworks] = await Promise.all([
-          fetchArtsyArtworks(),
-          fetchLocalArtworks(),
+        const [fetchedArtworks, fetchedEvents] = await Promise.all([
+          fetchArtworks(),
+          fetchEvents(),
         ]);
-        setArtworks([...localArtworks, ...artsyArtworks]);
-        console.log("Combined artworks:", [...localArtworks, ...artsyArtworks]);
+        setArtworks(fetchedArtworks);
+        setEvents(fetchedEvents);
       } catch (error) {
-        setError("Failed to load artworks. Please try again later.");
+        setError("Failed to load content. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAllArtworks();
+    fetchAllData();
   }, []);
-
-  const handleSearch = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `http://localhost:5005/api/search?query=${searchQuery}`
-      );
-      setArtworks(response.data);
-    } catch (error) {
-      console.error("Error searching artworks:", error);
-      setError("Failed to search artworks. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return <div className="container mx-auto mt-8 text-center">Loading...</div>;
@@ -87,76 +62,122 @@ function MainPage() {
   }
 
   return (
-    <div className="container mx-auto mt-8">
+    <div className="container bg-white mx-auto mt-8">
       {/* Hero Section */}
       <div
-        className="hero-section bg-cover bg-center text-white py-20 text-center"
+        className="hero-section rounded-lg bg-cover border-4 border-black border- bg-center text-white py-24 px-4"
         style={{
-          backgroundImage: `url('https://www.google.com/search?q=monet&tbm=isch&ved=2ahUKEwi7gJ_mne-HAxXx_AIHHaD7OJIQ2-cCegQIABAA&oq=monet&gs_lp=EgNpbWciBW1vbmV0MgoQABiABBhDGIoFMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAESOUxUIUpWLkwcAB4AJABAJgBXKAByQOqAQE2uAEDyAEA-AEBigILZ3dzLXdpei1pbWfCAgQQIxgniAYB&sclient=img&ei=Q-K5ZvvSM_H5i-gPoPfjkQk&bih=791&biw=767&rlz=1C1CHBF_ukDE1012DE1012#imgrc=dVY_ctePpr06FM')`,
-        }} // Replace with your hero image URL
+          backgroundImage: `url('https://www.artic.edu/iiif/2/${artworks[5]?.image_id}/full/843,/0/default.jpg')`,
+        }}
       >
-        <div className="container mx-auto">
-          <h1 className="text-5xl font-bold mb-4">
-            Discover Incredible Art &amp; Artists
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-6xl font-bold mb-4">
+            Discover Art Like Never Before
           </h1>
-          <p className="text-xl mb-8">
-            Explore a diverse collection of artworks from around the world.
+          <p className="text-2xl mb-8">
+            Explore our curated collections, upcoming events, and a rich archive
+            of artworks.
           </p>
-          <button className="btn btn-primary mt-4">Explore Now</button>
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="mb-8 mt-6">
-        <div className="form-control">
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="Search for artworks, artists, or collections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input input-bordered w-full"
-            />
-            <button onClick={handleSearch} className="btn btn-primary">
-              Search
-            </button>
+      {/* Featured Artwork Section */}
+      <section className="featured  py-16 px-4">
+        <div className="max-w-5xl w-full mx-auto">
+          <h2 className="text-4xl text-pallette-1 text-center font-bold mb-8">
+            Featured Artwork
+          </h2>
+          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-8">
+            <div className="bg-white h-screen text-pallette-1 p-6 rounded-lg shadow-lg">
+              <img
+                src={`https://www.artic.edu/iiif/2/${artworks[6]?.image_id}/full/843,/0/default.jpg`}
+                alt={artworks[0]?.title}
+                className="w-full h-96 object-cover text-pallette-1 rounded-lg mb-6"
+              />
+              <h3 className="text-2xl font-bold mb-4">{artworks[0]?.title}</h3>
+              <p className="text-xl text-pallette-1 font-semibold mb-4">
+                {artworks[0]?.artist_display}
+              </p>
+            </div>
+            <div className="grid place-items-stretch grid-cols-3 gap-8">
+              {artworks.slice(0, 6).map((artwork) => (
+                <div
+                  key={artwork.id}
+                  className="bg-white text-pallette-1 p-4 rounded-lg shadow-lg"
+                >
+                  <img
+                    src={`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`}
+                    alt={artwork.title}
+                    className="w-full h-48 object-cover rounded-lg mb-4"
+                  />
+                  <h3 className="text-xl font-bold mb-2">{artwork.title}</h3>
+                  <p className="text-pallette-1 font-semibold">
+                    {artwork.artist_display}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Filter by Category */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Filter by Category</h2>
-        <div className="flex space-x-4">
-          <button className="btn btn-secondary">Paintings</button>
-          <button className="btn btn-secondary">Sculptures</button>
-          <button className="btn btn-secondary">Photography</button>
-          <button className="btn btn-secondary">Drawings</button>
+      {/* Collections Section */}
+      <section className="collections-section py-16 bg-gray-50 px-4">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8">Our Collections</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {artworks.slice(5, 9).map((artwork) => (
+              <div
+                key={artwork.id}
+                className="bg-white p-6 rounded-lg shadow-lg"
+              >
+                <img
+                  src={`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`}
+                  alt={artwork.title}
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-2xl font-bold mb-4">{artwork.title}</h3>
+                <p className="text-lg text-gray-700 mb-4">
+                  {artwork.artist_display}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Featured Artworks */}
-      <div className="featured-artworks py-12">
-        <h2 className="text-3xl font-bold mb-6">Featured Artworks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {artworks.slice(0, 4).map((artwork) => (
-            <ArtworkCard key={artwork.id || artwork._id} artwork={artwork} />
-          ))}
+      {/* Events Section */}
+      <section className="events-section py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8">Upcoming Events</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {events.map((event) => (
+              <div key={event.id} className="bg-white p-6 rounded-lg shadow-lg">
+                <img
+                  src={event.image_url || "https://via.placeholder.com/600x400"}
+                  alt={event.title}
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-2xl font-bold mb-4">{event.title}</h3>
+                <p className="text-lg text-gray-700 mb-4">
+                  {event.short_description}
+                </p>
+                <p className="text-gray-500 mb-4">
+                  <strong>Date:</strong> {event.date_display}
+                </p>
+                <a
+                  href={event.api_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  More Details
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Artworks Feed */}
-      <div className="artworks-feed py-12">
-        <h2 className="text-3xl font-bold mb-6">Browse Artworks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {artworks.map((artwork) => (
-            <ArtworkCard key={artwork.id || artwork._id} artwork={artwork} />
-          ))}
-        </div>
-        <div className="text-center mt-8">
-          <button className="btn btn-primary">Load More Artworks</button>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

@@ -1,12 +1,18 @@
-const mongoose = require('mongoose');
+// models/Artwork.model.js
 
-const ArtSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  artist: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  collection: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
-});
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
-const Art = mongoose.model('Art', ArtSchema);
-module.exports = Art;
+const artworkSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String },
+    imageUrl: { type: String, required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true } // Assuming artworks are linked to a user
+  },
+  {
+    timestamps: true
+  }
+);
+
+module.exports = model("Artwork", artworkSchema);

@@ -4,6 +4,24 @@ const Art = require("../models/art.model");
 const Collection = require("../models/collection.model");
 const Exhibition = require("../models/exhibition.model");
 const User = require("../models/User.model");
+const authMiddleware = require("../middleware/auth.middleware");
+const fileUploader = require("../config/cloudinary.config");
+const Artwork = require("../models/art.model");
+router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  
+  // Send back the URL of the uploaded file
+  res.json({ fileUrl: req.file.path });
+});
+router.post('/artworks', (req, res, next) => {
+  Artwork.create(req.body)
+    .then(createdArtwork => res.status(200).json(createdArtwork))
+    .catch(err => next(err));
+});
+
 router.get("/search", async (req, res) => {
   try {
     const { query } = req.query;
@@ -20,31 +38,24 @@ router.get("/search", async (req, res) => {
   }
 });
 // Route to fetch all artworks
-router.get("/artworks", async (req, res) => {
-  try {
-    const artworks = await Art.find().populate("artist").exec();
-    res.json(artworks);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch artworks" });
-  }
-});
+
 
 // Route to handle artwork submission
-router.post("/submit", async (req, res) => {
+router.post("/artworks", authMiddleware, async (req, res) => {
   const { artistInfo, artworks, exhibition } = req.body;
-
+  console.log(req.user);
   try {
     // Find or create the user
-    let user = await User.findOne({ email: artistInfo.email });
-    if (!user) {
-      user = new User({
-        name: artistInfo.name,
-        email: artistInfo.email,
-        biography: artistInfo.biography,
-        phone: artistInfo.phone,
-      });
-      await user.save();
-    }
+    // let user = await User.findOne({ email: artistInfo.email });
+    // if (!user) {
+    //   user = new User({
+    //     name: artistInfo.name,
+    //     email: artistInfo.email,
+    //     biography: artistInfo.biography,
+    //     phone: artistInfo.phone,
+    //   });
+    //   await user.save();
+    // }
 
     // Save each artwork
     const savedArtworks = [];
@@ -53,7 +64,7 @@ router.post("/submit", async (req, res) => {
         title: artwork.title,
         description: artwork.description,
         image: artwork.image,
-        artist: user._id,
+        artist: req.user.id,
       });
       await newArt.save();
       savedArtworks.push(newArt._id);
@@ -64,26 +75,25 @@ router.post("/submit", async (req, res) => {
       const newExhibition = new Exhibition({
         title: exhibition.title,
         description: exhibition.description,
-        date: exhibition.date,
+        date: exhibition.date || new Date(),
         location: exhibition.location,
         artworks: savedArtworks,
-        artist: user._id,
+        artist: req.user.id,
       });
       await newExhibition.save();
-      user.exhibitions.push(newExhibition._id);
+      // user.exhibitions.push(newExhibition._id);
     }
 
     // Add artworks to the user's profile
-    user.artworks.push(...savedArtworks);
-    await user.save();
+    // user.artworks.push(...savedArtworks);
+    // await user.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Artwork submitted successfully",
-        artworks: savedArtworks,
-      });
+    res.status(201).json({
+      message: "Artwork submitted successfully",
+      artworks: savedArtworks,
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to submit artwork" });
   }
 });

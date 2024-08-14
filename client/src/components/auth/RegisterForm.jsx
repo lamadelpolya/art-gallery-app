@@ -144,8 +144,8 @@ function RegistrationForm() {
               required
             >
               <option value="role">Role</option>
-              <option value="individual">Individual</option>
-              <option value="business">Business</option>
+              <option value="individual">Artist</option>
+              <option value="business">Visitor</option>
             </select>
           </div>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
