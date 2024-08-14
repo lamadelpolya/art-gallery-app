@@ -14,14 +14,27 @@ router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
   }
   
   // Send back the URL of the uploaded file
-  res.json({ fileUrl: req.file.path });
 });
 router.post('/artworks', (req, res, next) => {
   Artwork.create(req.body)
     .then(createdArtwork => res.status(200).json(createdArtwork))
     .catch(err => next(err));
 });
+router.get("/artworks", authMiddleware, async (req, res) => {
+  try {
+    // Fetch artworks created by the logged-in user
+    const userArtworks = await Art.find({ artist: req.user.id });
 
+    if (!userArtworks) {
+      return res.status(404).json({ message: "No artworks found for this user" });
+    }
+
+    res.status(200).json(userArtworks);
+  } catch (error) {
+    console.error("Failed to fetch user's artworks:", error);
+    res.status(500).json({ error: "Failed to fetch user's artworks" });
+  }
+});
 router.get("/search", async (req, res) => {
   try {
     const { query } = req.query;

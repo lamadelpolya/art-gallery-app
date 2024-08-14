@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
 
 const UserProfilePage = () => {
   const { auth, setAuth } = useContext(AuthContext);
@@ -12,7 +13,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if(!auth.token) throw new Error("token must be provided")
+        if (!auth.token) throw new Error("token must be provided");
         const response = await fetch("http://localhost:5005/api/auth/users", {
           headers: {
             Authorization: `Bearer ${auth.token}`,
@@ -28,31 +29,43 @@ const UserProfilePage = () => {
           user: data,
         }));
 
-        // Fetch the user's artworks
-        const artworksResponse = await fetch("http://localhost:5005/api/artworks", {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        });
-        if (!artworksResponse.ok) {
-          throw new Error("Failed to fetch artworks");
-        }
-        const artworksData = await artworksResponse.json();
-        setArtworks(artworksData);
+        const fetchUserArtworks = async () => {
+          try {
+            const response = await axios.get("http://localhost:5005/api/artworks", {
+              headers: {
+                Authorization: `Bearer ${auth.token}`,
+              },
+            });
+            if (!response.status === 200) {
+              throw new Error("Failed to fetch artworks");
+            }
+            const artworksData = response.data;
+            setArtworks(artworksData);
+          } catch (error) {
+            console.error("Error during auth check or fetching artworks:", error);
+            setAuth({ isAuthenticated: false, user: null, token: null });
+          } finally {
+            setLoading(false);
+          }
+        };
 
+        fetchUserArtworks();
       } catch (error) {
         console.error("Error during auth check or fetching artworks:", error);
         setAuth({ isAuthenticated: false, user: null, token: null });
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchData();
   }, [auth.token]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) {
+    return <div>Loading artworks...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
@@ -60,10 +73,18 @@ const UserProfilePage = () => {
 
       <div className="mb-8">
         <h2 className="text-2xl font-semibold">Personal Information</h2>
-        <p><strong>Name:</strong> {auth?.user?.name}</p>
-        <p><strong>Email:</strong> {auth?.user?.email}</p>
-        <p><strong>Biography:</strong> {auth?.user?.biography}</p>
-        <p><strong>Phone:</strong> {auth?.user?.phone}</p>
+        <p>
+          <strong>Name:</strong> {auth?.user?.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {auth?.user?.email}
+        </p>
+        <p>
+          <strong>Biography:</strong> {auth?.user?.biography}
+        </p>
+        <p>
+          <strong>Phone:</strong> {auth?.user?.phone}
+        </p>
       </div>
 
       <div className="flex justify-end">

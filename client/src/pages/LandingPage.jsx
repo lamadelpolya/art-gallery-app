@@ -65,7 +65,7 @@ function MainPage() {
     <div className="container bg-white mx-auto mt-8">
       {/* Hero Section */}
       <div
-        className="hero-section rounded-lg bg-cover border-4 border-black border- bg-center text-white py-24 px-4"
+        className="hero-section rounded-lg bg-cover  bg-center text-white h-max py-32 px-2"
         style={{
           backgroundImage: `url('https://www.artic.edu/iiif/2/${artworks[5]?.image_id}/full/843,/0/default.jpg')`,
         }}
@@ -83,7 +83,7 @@ function MainPage() {
 
       {/* Featured Artwork Section */}
       <section className="featured  py-16 px-4">
-        <div className="max-w-5xl w-full mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl text-pallette-1 text-center font-bold mb-8">
             Featured Artwork
           </h2>
@@ -99,8 +99,8 @@ function MainPage() {
                 {artworks[0]?.artist_display}
               </p>
             </div>
-            <div className="grid place-items-stretch grid-cols-3 gap-8">
-              {artworks.slice(0, 6).map((artwork) => (
+            <div className="grid grid-cols-2 gap-8">
+              {artworks.slice(0, 4).map((artwork) => (
                 <div
                   key={artwork.id}
                   className="bg-white text-pallette-1 p-4 rounded-lg shadow-lg"
@@ -122,9 +122,11 @@ function MainPage() {
       </section>
 
       {/* Collections Section */}
-      <section className="collections-section py-16 bg-gray-50 px-4">
+      <section className="collections-section py-16 bg-white px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl font-bold mb-8">Our Collections</h2>
+          <h2 className="text-4xl text-center text-pallette-1 font-bold mb-8">
+            Our Collections
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {artworks.slice(5, 9).map((artwork) => (
               <div
@@ -136,8 +138,8 @@ function MainPage() {
                   alt={artwork.title}
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
-                <h3 className="text-2xl font-bold mb-4">{artwork.title}</h3>
-                <p className="text-lg text-gray-700 mb-4">
+                <h3 className="text-2xl text-pallette-1 font-bold mb-4">{artwork.title}</h3>
+                <p className="text-lg text-pallette-1 mb-4">
                   {artwork.artist_display}
                 </p>
               </div>
@@ -149,7 +151,9 @@ function MainPage() {
       {/* Events Section */}
       <section className="events-section py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl font-bold mb-8">Upcoming Events</h2>
+          <h2 className="text-4xl text-pallette-1 font-bold mb-8">
+            Upcoming Events
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {events.map((event) => (
               <div key={event.id} className="bg-white p-6 rounded-lg shadow-lg">
@@ -159,17 +163,17 @@ function MainPage() {
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
                 <h3 className="text-2xl font-bold mb-4">{event.title}</h3>
-                <p className="text-lg text-gray-700 mb-4">
+                <p className="text-lg text-pallette-1 mb-4">
                   {event.short_description}
                 </p>
-                <p className="text-gray-500 mb-4">
+                <p className="text-pallette-1 mb-4">
                   <strong>Date:</strong> {event.date_display}
                 </p>
                 <a
                   href={event.api_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
+                  className="text-pallette-1 hover:underline"
                 >
                   More Details
                 </a>

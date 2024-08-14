@@ -1,15 +1,6 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/profile-pictures/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${req.user._id}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({ storage: storage });
+const storage = multer.memoryStorage(); // Store the file in memory temporarily
+const upload = multer({ storage }); // This is what handles the file upload
 
 module.exports = upload;
