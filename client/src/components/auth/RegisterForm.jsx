@@ -152,7 +152,7 @@ function RegistrationForm() {
           <button
             type="submit"
             disabled={!getIsFormValid()}
-            className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-200"
+            className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
           >
             Create account
           </button>

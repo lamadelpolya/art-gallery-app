@@ -22,7 +22,7 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
   return (
     <nav
       ref={ref}
-      className="sticky top-0 z-50 flex items-center justify-between  border-y-2 border-pallette-1  bg-white p-4 text-pallette-200"
+      className="sticky w-screen top-0 z-50 flex items-center justify-between  border-b-4 border-pallette-1  bg-white p-4 text-pallette-200"
     >
       <div className="navbar bg-base-100">
         <div className="navbar-start">
@@ -63,6 +63,9 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
               </li>
               <li>
                 <Link to="/aboutus">Contacts</Link>
+              </li>
+              <li>
+                <Link to="/">Start page</Link>
               </li>
             </ul>
           </div>

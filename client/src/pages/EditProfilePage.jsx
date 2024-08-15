@@ -14,6 +14,7 @@ const ProfileUpdateForm = () => {
   const navigate = useNavigate(); // Initialize the navigate function
 
   useEffect(() => {
+    // Fetch the current user info to populate the form
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get("http://localhost:5005/api/auth/users", {
@@ -128,7 +129,7 @@ const ProfileUpdateForm = () => {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
           Update Profile
         </button>
       </form>

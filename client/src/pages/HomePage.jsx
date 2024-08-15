@@ -1,25 +1,37 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import Image from '../assets/images/'
 function HomePage() {
   return (
-    <div className="container mx-auto text-center mt-20">
-      <h1 className="text-4xl font-bold mb-8">Welcome to Our Art Gallery!</h1>
-      <div className="space-x-4">
-        <Link
-          to="/register"
-          className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Register
-        </Link>
-        <Link
-          to="/login"
-          className="btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Login
-        </Link>
+    <div className=" w-1/2 h-screen bg-pallette-1 flex items-center justify-center">
+      <div className="text-center">
+        {/* Welcome Text */}
+        <div className="text-white text-[90px] font-normal  mb-10">
+          Welcome to the ARTRA
+        </div>
+
+        {/* Buttons */}
+        <div className="flex justify-center space-x-8">
+          {/* Sign Up Button */}
+          <Link
+            to="/register"
+            className="border border-white rounded-[60px] text-white text-[25px] font-semibold px-10 py-4 "
+          >
+            Sign Up
+          </Link>
+
+          {/* Sign In Button */}
+          <Link
+            to="/login"
+            className="border border-white rounded-[60px] text-white text-[25px] font-semibold px-10 py-4 f"
+          >
+            Sign In
+          </Link>
+        </div>
       </div>
+      
     </div>
+    
   );
 }
 

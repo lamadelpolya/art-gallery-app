@@ -26,7 +26,7 @@ function App() {
   return (
     <Router>
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <main className="p-4">
+      <main className=" w-screen bg-white">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/artworks/add" element={<AddArtwork />} />

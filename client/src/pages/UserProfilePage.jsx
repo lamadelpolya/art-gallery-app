@@ -29,25 +29,31 @@ const UserProfilePage = () => {
           user: data,
         }));
 
-        const fetchUserArtworks = async () => {
-          try {
-            const response = await axios.get("http://localhost:5005/api/artworks", {
-              headers: {
-                Authorization: `Bearer ${auth.token}`,
-              },
-            });
-            if (!response.status === 200) {
-              throw new Error("Failed to fetch artworks");
-            }
-            const artworksData = response.data;
-            setArtworks(artworksData);
-          } catch (error) {
-            console.error("Error during auth check or fetching artworks:", error);
-            setAuth({ isAuthenticated: false, user: null, token: null });
-          } finally {
-            setLoading(false);
-          }
-        };
+        // const fetchUserArtworks = async () => {
+        //   try {
+        //     const response = await axios.get(
+        //       "http://localhost:5005/api/artworks",
+        //       {
+        //         headers: {
+        //           Authorization: `Bearer ${auth.token}`,
+        //         },
+        //       }
+        //     );
+        //     if (!response.status === 200) {
+        //       throw new Error("Failed to fetch artworks");
+        //     }
+        //     const artworksData = response.data;
+        //     setArtworks(artworksData);
+        //   } catch (error) {
+        //     console.error(
+        //       "Error during auth check or fetching artworks:",
+        //       error
+        //     );
+        //     setAuth({ isAuthenticated: false, user: null, token: null });
+        //   } finally {
+        //     setLoading(false);
+        //   }
+        // };
 
         fetchUserArtworks();
       } catch (error) {
@@ -59,9 +65,9 @@ const UserProfilePage = () => {
     fetchData();
   }, [auth.token]);
 
-  if (loading) {
-    return <div>Loading artworks...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading artworks...</div>;
+  // }
 
   if (error) {
     return <div>{error}</div>;
@@ -90,12 +96,19 @@ const UserProfilePage = () => {
       <div className="flex justify-end">
         <button
           onClick={() => navigate("/edit-profile")}
-          className="btn btn-secondary"
+          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
         >
           Edit Profile
         </button>
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+        >
+          Your Arts
+        </button>
       </div>
-
+      
+{/* 
       <div className="mb-8 mt-8">
         <h2 className="text-2xl font-semibold">My Artworks</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -111,13 +124,13 @@ const UserProfilePage = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      <div className="flex justify-end mt-4">
+      {/* <div className="flex justify-end mt-4">
         <Link to="/submit-art" className="btn btn-secondary">
           Submit New Artwork
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

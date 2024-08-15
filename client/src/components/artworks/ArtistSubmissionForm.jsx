@@ -150,7 +150,7 @@ const ArtistSubmissionForm = () => {
             <button
               type="button"
               onClick={handleNextStep}
-              className="btn btn-primary"
+              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
             >
               Next
             </button>
@@ -202,7 +202,7 @@ const ArtistSubmissionForm = () => {
                 <button
                   type="button"
                   onClick={() => handleRemoveArtwork(index)}
-                  className="btn btn-danger"
+                  className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
                 >
                   Remove Artwork
                 </button>
@@ -211,7 +211,7 @@ const ArtistSubmissionForm = () => {
             <button
               type="button"
               onClick={handleAddArtwork}
-              className="btn btn-secondary mb-4"
+              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
             >
               Add Artwork
             </button>
@@ -219,14 +219,14 @@ const ArtistSubmissionForm = () => {
               <button
                 type="button"
                 onClick={handlePreviousStep}
-                className="btn btn-secondary"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
               >
                 Back
               </button>
               <button
                 type="button"
                 onClick={handleNextStep}
-                className="btn btn-primary"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
               >
                 Next
               </button>
@@ -290,11 +290,11 @@ const ArtistSubmissionForm = () => {
               <button
                 type="button"
                 onClick={handlePreviousStep}
-                className="btn btn-secondary"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
               >
                 Back
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
                 Submit
               </button>
               

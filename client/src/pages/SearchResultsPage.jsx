@@ -42,22 +42,9 @@ const SearchResultsPage = () => {
           onChange={(e) => setArtist(e.target.value)}
           className="border p-2 rounded w-full mb-4"
         />
-        <input
-          type="text"
-          placeholder="Medium"
-          value={medium}
-          onChange={(e) => setMedium(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
-        />
-        <input
-          type="text"
-          placeholder="Price Range"
-          value={priceRange}
-          onChange={(e) => setPriceRange(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
-        />
+        
       </div>
-      <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded mb-8">Search</button>
+      <button onClick={handleSearch} className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">Search</button>
 
       {loading && <div>Loading...</div>}
 

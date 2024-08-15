@@ -18,7 +18,7 @@ const UserDashboard = () => {
 
       <div className="mb-8">
         <h2 className="text-3xl font-semibold mb-4">Profile Settings</h2>
-        <Link to="/profile" className="text-blue-500">Edit My Profile</Link>
+        <Link to="/profile" className="text-blue-500">Back to Profile</Link>
       </div>
     </div>
   );

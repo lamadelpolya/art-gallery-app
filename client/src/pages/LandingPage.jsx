@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 function MainPage() {
   const [artworks, setArtworks] = useState([]);
@@ -11,7 +13,7 @@ function MainPage() {
     const fetchArtworks = async () => {
       try {
         const response = await axios.get(
-          "https://api.artic.edu/api/v1/artworks?page=4"
+          "https://api.artic.edu/api/v1/artworks?page=6"
         );
         return response.data.data;
       } catch (error) {
@@ -63,9 +65,9 @@ function MainPage() {
 
   return (
     <div className="container bg-white mx-auto mt-8">
-      {/* Hero Section */}
+      
       <div
-        className="hero-section rounded-lg bg-cover  bg-center text-white h-max py-32 px-2"
+        className="hero-section rounded-3xl bg-cover  bg-center text-white h-max py-32 px-2"
         style={{
           backgroundImage: `url('https://www.artic.edu/iiif/2/${artworks[5]?.image_id}/full/843,/0/default.jpg')`,
         }}
@@ -83,8 +85,9 @@ function MainPage() {
 
       {/* Featured Artwork Section */}
       <section className="featured  py-16 px-4">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl text-pallette-1 text-center font-bold mb-8">
+        <div className="max-w-screen mx-auto">
+          <h2 className="text-4xl text-white text-center font-bold mb-8">
+            
             Featured Artwork
           </h2>
           <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-8">
@@ -122,16 +125,21 @@ function MainPage() {
       </section>
 
       {/* Collections Section */}
-      <section className="collections-section py-16 bg-white px-4">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl text-center text-pallette-1 font-bold mb-8">
-            Our Collections
-          </h2>
+      <section className="collections-section rounded-3xl py-16 bg-[#BB4430] px-4">
+        <div className="max-w-5xl   mx-auto">
+        <Link
+            to="/collections"
+            className="inline-block w-[300px] h-[80px] border-2 border-white rounded-[60px] text-white text-4xl hover:bg-gray-700 font-bold mb-8"
+          >
+            <div className="flex items-center justify-center h-full">
+              Our Collections
+            </div>
+          </Link>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {artworks.slice(5, 9).map((artwork) => (
               <div
                 key={artwork.id}
-                className="bg-white p-6 rounded-lg shadow-lg"
+                className="bg-white p-6 rounded-3xl shadow-lg"
               >
                 <img
                   src={`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`}
@@ -150,30 +158,30 @@ function MainPage() {
 
       {/* Events Section */}
       <section className="events-section py-16 px-4">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-4xl text-pallette-1 font-bold mb-8">
+        <div className="max-w-screen mx-auto">
+          <h2 className="text-4xl text-wh font-bold mb-8">
             Upcoming Events
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {events.map((event) => (
-              <div key={event.id} className="bg-white p-6 rounded-lg shadow-lg">
+              <div key={event.id} className="bg-[#BB4430] p-6 rounded-3xl shadow-lg">
                 <img
                   src={event.image_url || "https://via.placeholder.com/600x400"}
                   alt={event.title}
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
-                <h3 className="text-2xl font-bold mb-4">{event.title}</h3>
-                <p className="text-lg text-pallette-1 mb-4">
+                <h3 className="text-2xl text-white font-bold mb-4">{event.title}</h3>
+                <p className="text-lg text-white mb-4">
                   {event.short_description}
                 </p>
-                <p className="text-pallette-1 mb-4">
+                <p className="text-white mb-4">
                   <strong>Date:</strong> {event.date_display}
                 </p>
                 <a
                   href={event.api_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-pallette-1 hover:underline"
+                  className="text-white hover:underline"
                 >
                   More Details
                 </a>

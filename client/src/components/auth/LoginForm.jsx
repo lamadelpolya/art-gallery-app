@@ -71,7 +71,7 @@ const LoginForm = () => {
           />
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
           Login
         </button>
       </form>

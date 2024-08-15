@@ -50,7 +50,7 @@ function AddArtwork() {
           onChange={(e) => setDescription(e.target.value)} 
         />
         <input type="file" onChange={handleFileUpload} />
-        <button type="submit">Save new artwork</button>
+        <button className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy" type="submit">Save new artwork</button>
       </form>
     </div>
   );

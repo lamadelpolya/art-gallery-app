@@ -67,7 +67,7 @@ const AboutPage = () => {
       </section>
 
       <div className="flex justify-center mt-8">
-        <a href="/register" className="btn btn-primary">
+        <a href="/register" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
           Get Started
         </a>
       </div>
