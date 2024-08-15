@@ -80,7 +80,6 @@ const ArtistSubmissionForm = () => {
         }
       );
       console.log("Artwork submitted successfully:", response.data);
-      // Redirect or show success message after submission
       alert("Artwork submitted successfully!");
     } catch (error) {
       console.error("Error submitting artwork:", error);
@@ -89,144 +88,158 @@ const ArtistSubmissionForm = () => {
   };
 
   return (
-    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <form onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-2xl"
+      >
         {step === 1 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-3xl font-bold mb-6 text-center text-white">
               Step 1: Artist Information
             </h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Name
+              <label className="block text-xl text-white font-bold mb-2">
+                Name <sup className="text-red-500">*</sup>
               </label>
               <input
                 type="text"
                 name="name"
                 value={artistInfo.name}
                 onChange={handleArtistInfoChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                 required
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Biography
+              <label className="block text-xl text-white font-bold mb-2">
+                Biography <sup className="text-red-500">*</sup>
               </label>
               <textarea
                 name="biography"
                 value={artistInfo.biography}
                 onChange={handleArtistInfoChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                 required
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Email
+              <label className="block text-xl text-white font-bold mb-2">
+                Email <sup className="text-red-500">*</sup>
               </label>
               <input
                 type="email"
                 name="email"
                 value={artistInfo.email}
                 onChange={handleArtistInfoChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                 required
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Phone
+              <label className="block text-xl text-white font-bold mb-2">
+                Phone <sup className="text-red-500">*</sup>
               </label>
               <input
                 type="tel"
                 name="phone"
                 value={artistInfo.phone}
                 onChange={handleArtistInfoChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                 required
               />
             </div>
-            <button
-              type="button"
-              onClick={handleNextStep}
-              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
-            >
-              Next
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={handleNextStep}
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
 
         {step === 2 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-3xl font-bold mb-6 text-center text-white">
               Step 2: Artwork Submission
             </h2>
             {artworks.map((artwork, index) => (
               <div key={index} className="mb-4">
-                <h3 className="text-xl font-semibold">Artwork {index + 1}</h3>
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Title
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Artwork {index + 1}
+                </h3>
+                <div className="mb-4">
+                  <label className="block text-xl text-white font-bold mb-2">
+                    Title <sup className="text-red-500">*</sup>
                   </label>
                   <input
                     type="text"
                     name="title"
                     value={artwork.title}
                     onChange={(e) => handleArtworkChange(index, e)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                     required
                   />
                 </div>
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Description
+                <div className="mb-4">
+                  <label className="block text-xl text-white font-bold mb-2">
+                    Description <sup className="text-red-500">*</sup>
                   </label>
                   <textarea
                     name="description"
                     value={artwork.description}
                     onChange={(e) => handleArtworkChange(index, e)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
                     required
                   />
                 </div>
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Image</label>
+                <div className="mb-4">
+                  <label className="block text-xl text-white font-bold mb-2">
+                    Image <sup className="text-red-500">*</sup>
+                  </label>
                   <input
                     type="file"
                     name="file"
                     onChange={(e) => handleArtworkChange(index, e)}
-                    className="file-input file-input-bordered w-full max-w-xs"                     required
+                    className="file-input file-input-bordered w-full max-w-xs text-black"
+                    required
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveArtwork(index)}
-                  className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
-                >
-                  Remove Artwork
-                </button>
+                <div className="flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveArtwork(index)}
+                    className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+                  >
+                    Remove Artwork
+                  </button>
+                </div>
               </div>
             ))}
-            <button
-              type="button"
-              onClick={handleAddArtwork}
-              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
-            >
-              Add Artwork
-            </button>
+            <div className="flex justify-center mb-4">
+              <button
+                type="button"
+                onClick={handleAddArtwork}
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+              >
+                Add Artwork
+              </button>
+            </div>
             <div className="flex justify-between">
               <button
                 type="button"
                 onClick={handlePreviousStep}
-                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
               >
                 Back
               </button>
               <button
                 type="button"
                 onClick={handleNextStep}
-                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
               >
                 Next
               </button>
@@ -236,11 +249,11 @@ const ArtistSubmissionForm = () => {
 
         {step === 3 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-3xl font-bold mb-6 text-center text-white">
               Step 3: Exhibition Creation (Optional)
             </h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xl text-white font-bold mb-2">
                 Exhibition Title
               </label>
               <input
@@ -248,22 +261,22 @@ const ArtistSubmissionForm = () => {
                 name="title"
                 value={exhibition.title}
                 onChange={handleExhibitionChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xl text-white font-bold mb-2">
                 Description
               </label>
               <textarea
                 name="description"
                 value={exhibition.description}
                 onChange={handleExhibitionChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xl text-white font-bold mb-2">
                 Date
               </label>
               <input
@@ -271,11 +284,11 @@ const ArtistSubmissionForm = () => {
                 name="date"
                 value={exhibition.date}
                 onChange={handleExhibitionChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xl text-white font-bold mb-2">
                 Location
               </label>
               <input
@@ -283,21 +296,23 @@ const ArtistSubmissionForm = () => {
                 name="location"
                 value={exhibition.location}
                 onChange={handleExhibitionChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               />
             </div>
             <div className="flex justify-between">
               <button
                 type="button"
                 onClick={handlePreviousStep}
-                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
               >
                 Back
               </button>
-              <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
+              <button
+                type="submit"
+                className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+              >
                 Submit
               </button>
-              
             </div>
           </div>
         )}

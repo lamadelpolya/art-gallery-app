@@ -72,66 +72,84 @@ const ProfileUpdateForm = () => {
   };
 
   return (
-    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Update Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={userInfo.name}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={userInfo.email}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Biography
-          </label>
-          <textarea
-            name="biography"
-            value={userInfo.biography}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Phone</label>
-          <input
-            type="tel"
-            name="phone"
-            value={userInfo.phone}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Profile Picture
-          </label>
-          <input
-            type="file"
-            name="profilePicture"
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
-          Update Profile
-        </button>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
+      >
+        <fieldset>
+          <h2 className="text-3xl font-bold mb-6 text-center text-white">
+            Update Profile
+          </h2>
+          <div className="mb-4">
+            <label className="block text-xl text-white font-bold mb-2">
+              Name <sup className="text-red-500">*</sup>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={userInfo.name}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-xl text-white font-bold mb-2">
+              Email <sup className="text-red-500">*</sup>
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={userInfo.email}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-xl text-white font-bold mb-2">
+              Biography
+            </label>
+            <textarea
+              name="biography"
+              value={userInfo.biography}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-xl text-white font-bold mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={userInfo.phone}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-xl text-white font-bold mb-2">
+              Profile Picture
+            </label>
+            <input
+              type="file"
+              name="profilePicture"
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+            />
+          </div>
+          <div className="flex justify-center">  {/* Center the button */}
+            <button
+              type="submit"
+              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+            >
+              Update Profile
+            </button>
+          </div>
+        </fieldset>
       </form>
     </div>
   );

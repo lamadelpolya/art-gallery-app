@@ -31,20 +31,19 @@ const CollectionsPage = () => {
 
   return (
     <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold mb-6">Artworks Collection</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {artworks.map((artwork) => (
           <div
             key={artwork.id}
-            className="bg-gray-100 p-4 rounded-lg shadow-md"
+            className="bg-pallette-2 p-4 rounded-3xl shadow-md"
           >
             <img
               src={`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`}
               alt={artwork.title}
-              className="w-full h-48 object-cover rounded-md mb-4"
+              className="w-full  object-cover rounded-xl border-8 border-white mb-4"
             />
-            <h3 className="text-xl font-bold mb-2">{artwork.title}</h3>
-            <p className="text-gray-700 mb-4">{artwork.artist_title}</p>
+            <h3 className="text-2xl text-white text-center font-bold mb-2">{artwork.title}</h3>
+            <p className="text-white text-xl text-center mb-4">{artwork.artist_title}</p>
           </div>
         ))}
       </div>

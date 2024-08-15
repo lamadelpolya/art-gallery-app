@@ -74,17 +74,18 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
       >
         <fieldset>
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          <h2 className="text-3xl font-bold mb-6 text-center text-white">
             Sign Up
           </h2>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-xl text-white font-bold mb-2">
               Name <sup className="text-red-500">*</sup>
             </label>
             <input
@@ -93,12 +94,12 @@ function RegistrationForm() {
                 setName(e.target.value);
               }}
               placeholder="Name"
-              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none "
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-xl text-white font-bold mb-2">
               Email address <sup className="text-red-500">*</sup>
             </label>
             <input
@@ -108,12 +109,12 @@ function RegistrationForm() {
               }}
               placeholder="Email address"
               type="email"
-              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg text-white focus:outline-none focus:border-blue-500"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-white text-xl font-bold mb-2">
               Password <sup className="text-red-500">*</sup>
             </label>
             <input
@@ -126,7 +127,7 @@ function RegistrationForm() {
                 setPassword({ ...password, isTouched: true });
               }}
               placeholder="Password"
-              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:border-blue-500"
               required
             />
             {password.isTouched && password.value.length < 8 ? (
@@ -134,13 +135,13 @@ function RegistrationForm() {
             ) : null}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-white text-xl font-bold mb-2">
               Role <sup className="text-red-500">*</sup>
             </label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:border-blue-500"
               required
             >
               <option value="role">Role</option>
@@ -149,13 +150,15 @@ function RegistrationForm() {
             </select>
           </div>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <div className="flex justify-center"> 
           <button
             type="submit"
             disabled={!getIsFormValid()}
-            className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+            className="border border-white text-center rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4 fy"
           >
             Create account
           </button>
+          </div>
         </fieldset>
       </form>
     </div>

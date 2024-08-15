@@ -39,41 +39,50 @@ const LoginForm = () => {
       setError(error.message);
     }
   };
-  console.log(error);
+  
   return (
-    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
+      >
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">
+          Login
+        </h2>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Email
+          <label className="block text-xl text-white font-bold mb-2">
+            Email <sup className="text-red-500">*</sup>
           </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 p-2 border rounded w-full"
+            placeholder="Email address"
+            className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             required
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Password
+          <label className="block text-xl text-white font-bold mb-2">
+            Password <sup className="text-red-500">*</sup>
           </label>
           <input
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="mt-1 p-2 border rounded w-full"
+            placeholder="Password"
+            className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             required
           />
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
-        <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
-          Login
-        </button>
+        <div className="flex justify-center">
+          <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
+            Login
+          </button>
+        </div>
       </form>
     </div>
   );
