@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
-    <div className="flex w-full h-screen bg-white">
+    <div className="flex w-full  flex-grow h-[690px] bg-white">
       
       {/* Left Side: Text and Buttons */}
       <div className="w-1/2 bg-pallette-1 flex items-center justify-center">
         <div className="text-center">
           {/* Welcome Text */}
-          <div className="text-white text-[90px] font-normal mb-10">
+          <div className="text-white text-[70px] font-normal mb-10">
             Welcome to the ARTRA
           </div>
 
@@ -36,7 +36,7 @@ function HomePage() {
       
       {/* Right Side: Background Image */}
       <div
-        className="w-1/2 bg-cover bg-center"
+        className="w-1/2  bg-cover bg-center"
         style={{ backgroundImage: `url('/src/assets/image.png')` }}
       ></div>
     </div>

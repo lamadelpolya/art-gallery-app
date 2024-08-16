@@ -47,6 +47,10 @@ function RegistrationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!getIsFormValid()) {
+        setError("Please fill out all required fields");
+        return;
+      }
       const response = await fetch(`/api/auth/register`, {
         method: "POST",
         headers: {
@@ -59,12 +63,11 @@ function RegistrationForm() {
           role,
         }),
       });
-
       if (!response.ok) {
         const errorData = await response.json(); // Extract the error message
+        console.log(response);
         throw new Error(errorData.error || "Registration failed");
       }
-
       alert("Account created successfully!");
       clearForm();
       navigate("/login"); // Navigate to login page after registration
@@ -74,11 +77,13 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      
+    <div
+      className="flex items-center w-full h-full justify-center min-h-screen bg-cover  bg-center"
+      style={{ backgroundImage: `url('/src/assets/back.png')` }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
+        className="bg-pallette-1 p-8 border-4 border- white rounded-3xl shadow-lg w-full max-w-md"
       >
         <fieldset>
           <h2 className="text-3xl font-bold mb-6 text-center text-white">
@@ -109,7 +114,7 @@ function RegistrationForm() {
               }}
               placeholder="Email address"
               type="email"
-              className="w-full px-4 py-2 border rounded-lg text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:border-blue-500"
               required
             />
           </div>
@@ -150,14 +155,13 @@ function RegistrationForm() {
             </select>
           </div>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <div className="flex justify-center"> 
-          <button
-            type="submit"
-            disabled={!getIsFormValid()}
-            className="border border-white text-center rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4 fy"
-          >
-            Create account
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="border border-white text-center rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4 fy"
+            >
+              Create account
+            </button>
           </div>
         </fieldset>
       </form>

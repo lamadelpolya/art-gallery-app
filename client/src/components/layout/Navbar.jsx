@@ -1,19 +1,33 @@
-import React, { forwardRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { forwardRef, useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext"; // Import AuthContext
+import axios from "axios";
 
 const Navbar = forwardRef(({ toggleSidebar }, ref) => {
   const [inputValue, setInputValue] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const navigate = useNavigate();
+  const [searchResults, setSearchResults] = useState([]); // State for search results
+  const { auth, logout } = useContext(AuthContext); // Access auth state and logout function
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (inputValue.trim()) {
-      navigate(`/search?q=${inputValue}`);
-      setInputValue(""); // Clear the search input after submission
-      setIsSearchVisible(false); // Hide the search bar after submission
-    }
-  };
+  // Fetch search results when the user types in the search bar
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (inputValue.trim()) {
+        try {
+          const response = await axios.get(
+            `http://localhost:5005/api/search?q=${inputValue}`
+          );
+          setSearchResults(response.data); // Assuming your API returns an array of results
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+        }
+      } else {
+        setSearchResults([]); // Clear results when search input is empty
+      }
+    };
+
+    fetchSearchResults();
+  }, [inputValue]);
 
   const toggleSearchBar = () => {
     setIsSearchVisible(!isSearchVisible);
@@ -22,7 +36,7 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
   return (
     <nav
       ref={ref}
-      className="sticky w-screen top-0 z-50 flex items-center justify-between  border-b-4 border-pallette-1  bg-white p-4 text-pallette-200"
+      className="sticky w-screen top-0 z-50 flex items-center justify-between border-b-4 border-pallette-1 bg-white p-4 text-pallette-200"
     >
       <div className="navbar bg-base-100">
         <div className="navbar-start">
@@ -50,11 +64,9 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm  text-pallette-1 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-sm text-pallette-1 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <Link to="/about">About</Link>
-              </li>
+             
               <li>
                 <Link to="/collections">Collections</Link>
               </li>
@@ -62,10 +74,16 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
                 <Link to="/exhibitions">Exhibitions</Link>
               </li>
               <li>
+                <Link to="/dashboard">Your Dashboard</Link>
+              </li>
+              <li>
                 <Link to="/aboutus">Contacts</Link>
               </li>
               <li>
                 <Link to="/">Start page</Link>
+              </li>
+              <li>
+                <Link to="/about">About</Link>
               </li>
             </ul>
           </div>
@@ -99,35 +117,58 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
           </button>
           {/* Conditional Rendering of the Search Bar */}
           {isSearchVisible && (
-            <form onSubmit={handleSearchSubmit} className="form-inline ml-4">
+            <div className="relative">
               <input
                 type="text"
-                className="input input-bordered"
+                className="input input-bordered ml-4"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Search for artists, artworks..."
               />
-              <button type="submit" className="btn btn-primary ml-2">
-                Search
-              </button>
-            </form>
+              {/* Search Results Dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute mt-2 w-full bg-white shadow-lg rounded-md">
+                  {searchResults.map((result, index) => (
+                    <div
+                      key={index}
+                      className="block p-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => {
+                        // Handle the click to navigate or show details
+                      }}
+                    >
+                      {result.title || result.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
-          {/* User Avatar */}
-
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-square avatar"
-          >
-            <Link to="/profile">
-              <div className="w-10 rounded-full">
-                <img
-                  alt="User Avatar"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+          {/* User Avatar or Login/Logout Buttons */}
+          {auth.isAuthenticated ? (
+            <>
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-square avatar"
+              >
+                <Link to="/profile">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="User Avatar"
+                      src={auth.user.profilePicture || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                    />
+                  </div>
+                </Link>
               </div>
+              <button onClick={logout} className="btn text-3xl text-pallette-1 btn-ghost ml-2">
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn text-3xl text-pallette-1 btn-ghost ml-2">
+              Login
             </Link>
-          </div>
+          )}
         </div>
       </div>
     </nav>

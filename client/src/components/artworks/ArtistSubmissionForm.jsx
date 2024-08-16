@@ -81,6 +81,9 @@ const ArtistSubmissionForm = () => {
       );
       console.log("Artwork submitted successfully:", response.data);
       alert("Artwork submitted successfully!");
+
+      window.location.href = "/dashboard";
+
     } catch (error) {
       console.error("Error submitting artwork:", error);
       alert("Failed to submit artwork. Please try again.");
@@ -88,10 +91,14 @@ const ArtistSubmissionForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
+    <div
+      className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url('/src/assets/back.png')` }}
+    >
+      {" "}
       <form
         onSubmit={handleSubmit}
-        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-2xl"
+        className="bg-pallette-1 border-4 border-white p-8 rounded-3xl shadow-lg w-full max-w-xl"
       >
         {step === 1 && (
           <div>

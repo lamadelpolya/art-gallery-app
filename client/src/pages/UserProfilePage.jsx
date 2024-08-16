@@ -1,136 +1,154 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 
 const UserProfilePage = () => {
   const { auth, setAuth } = useContext(AuthContext);
-  const [artworks, setArtworks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  const [uploading, setUploading] = useState(false); // State to manage uploading status
+  const [profileImageUrl, setProfileImageUrl] = useState(auth?.user?.profilePicture || ''); // Initial state for profile image
   const navigate = useNavigate();
+console.log(auth)
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      alert('Please select a file first.');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const imageUrl = await uploadImageToCloudinary(selectedFile);
+      setProfileImageUrl(imageUrl);
+
+      // Send the image URL to your backend to update the user's profile
+      await axios.post(
+        'http://localhost:5005/api/user/profile-picture',
+        { imageUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+
+      // Update the auth context with the new profile picture
+      setAuth((prev) => ({
+        ...prev,
+        user: { ...prev.user, profilePicture: imageUrl },
+      }));
+
+      alert('Profile picture uploaded successfully!');
+    } catch (error) {
+      alert('Error uploading profile picture.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
+    if (!auth.token) {
+      // If token is not available, don't attempt to fetch data
+      console.error("Token is not available.");
+      setError("Please log in to view your profile.");
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        if (!auth.token) throw new Error("token must be provided");
         const response = await fetch("http://localhost:5005/api/auth/users", {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
         });
+        console.log(response)
         if (!response.ok) {
+          
           throw new Error("Failed to fetch user data");
         }
         const data = await response.json();
+        console.log(data)
         setAuth((prev) => ({
           ...prev,
           isAuthenticated: true,
           user: data,
         }));
-
-        // const fetchUserArtworks = async () => {
-        //   try {
-        //     const response = await axios.get(
-        //       "http://localhost:5005/api/artworks",
-        //       {
-        //         headers: {
-        //           Authorization: `Bearer ${auth.token}`,
-        //         },
-        //       }
-        //     );
-        //     if (!response.status === 200) {
-        //       throw new Error("Failed to fetch artworks");
-        //     }
-        //     const artworksData = response.data;
-        //     setArtworks(artworksData);
-        //   } catch (error) {
-        //     console.error(
-        //       "Error during auth check or fetching artworks:",
-        //       error
-        //     );
-        //     setAuth({ isAuthenticated: false, user: null, token: null });
-        //   } finally {
-        //     setLoading(false);
-        //   }
-        // };
-
-        fetchUserArtworks();
       } catch (error) {
-        console.error("Error during auth check or fetching artworks:", error);
+        console.error("Error during auth check:", error);
         setAuth({ isAuthenticated: false, user: null, token: null });
+        setError("Failed to load user data.");
       }
     };
 
     fetchData();
-  }, [auth.token]);
-
-  // if (loading) {
-  //   return <div>Loading artworks...</div>;
-  // }
+  }, [auth.token, setAuth]);
 
   if (error) {
     return <div>{error}</div>;
   }
 
-  return (
-    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold mb-4">User Profile</h1>
+  if (!auth.token) {
+    return <div>Please log in to view your profile.</div>;
+  }
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold">Personal Information</h2>
-        <p>
+  return (
+    <div className="container border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">User Profile</h1>
+
+      <section className="mb-12">
+        <h2 className="text-3xl text-pallette-1 font-bold mb-4">Personal Information</h2>
+        <p className="text-xl font-medium text-pallette-1">
           <strong>Name:</strong> {auth?.user?.name}
         </p>
-        <p>
+        <p className="text-xl font-medium text-pallette-1">
           <strong>Email:</strong> {auth?.user?.email}
         </p>
-        <p>
+        <p className="text-xl font-medium text-pallette-1">
           <strong>Biography:</strong> {auth?.user?.biography}
         </p>
-        <p>
+        <p className="text-xl font-medium text-pallette-1">
           <strong>Phone:</strong> {auth?.user?.phone}
         </p>
-      </div>
+      </section>
 
-      <div className="flex justify-end">
+      <section className="mb-12">
+        <h3 className="text-3xl text-pallette-1 font-bold mb-4">Profile Picture</h3>
+        {profileImageUrl && (
+          <img
+            src={profileImageUrl}
+            alt="Profile"
+            className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-pallette-1"
+          />
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="mb-2"
+        />
+        <button
+          onClick={handleUpload}
+          disabled={uploading}
+          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
+        >
+          {uploading ? 'Uploading...' : 'Upload Profile Picture'}
+        </button>
+      </section>
+
+      <div className="flex justify-center mt-8">
         <button
           onClick={() => navigate("/edit-profile")}
-          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
         >
           Edit Profile
         </button>
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
-        >
-          Your Arts
-        </button>
       </div>
-      
-{/* 
-      <div className="mb-8 mt-8">
-        <h2 className="text-2xl font-semibold">My Artworks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {artworks.map((artwork, index) => (
-            <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md">
-              <img
-                src={artwork.image}
-                alt={artwork.title}
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-              <h3 className="text-xl font-bold">{artwork.title}</h3>
-              <p className="text-gray-700">{artwork.description}</p>
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-      {/* <div className="flex justify-end mt-4">
-        <Link to="/submit-art" className="btn btn-secondary">
-          Submit New Artwork
-        </Link>
-      </div> */}
     </div>
   );
 };

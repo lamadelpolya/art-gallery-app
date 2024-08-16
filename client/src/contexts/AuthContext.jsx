@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
       if (auth.token) {
         try {
           const response = await axios.get("http://localhost:5005/api/auth/users", {
-            // Updated URL
             headers: {
               Authorization: `Bearer ${auth.token}`,
             },
@@ -27,7 +26,7 @@ export function AuthProvider({ children }) {
           }));
         } catch (error) {
           setAuth({ isAuthenticated: false, user: null, token: null });
-          //localStorage.removeItem('token');
+          localStorage.removeItem("token");
         }
       }
     };

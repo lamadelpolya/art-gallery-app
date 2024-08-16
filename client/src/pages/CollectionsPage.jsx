@@ -26,7 +26,7 @@ const CollectionsPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="container mx-auto mt-8">Loading...</div>;
+    return <div className="container text-pallette-1 text-2xl font-bold  mx-auto mt-8">Loading...</div>;
   }
 
   return (

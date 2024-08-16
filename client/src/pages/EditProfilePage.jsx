@@ -10,6 +10,7 @@ const ProfileUpdateForm = () => {
     phone: "",
     profilePicture: null, // to handle file upload
   });
+  console.log(userInfo.biography)
 
   const navigate = useNavigate(); // Initialize the navigate function
 
@@ -50,6 +51,7 @@ const ProfileUpdateForm = () => {
     for (let key in userInfo) {
       formData.append(key, userInfo[key]);
     }
+    console.log(formData)
 
     try {
       const response = await axios.put(
@@ -72,8 +74,10 @@ const ProfileUpdateForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <form
+<div
+      className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center bg-scroll"
+      style={{ backgroundImage: `url('/src/assets/back.png')` }}
+    >      <form
         onSubmit={handleSubmit}
         className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
       >

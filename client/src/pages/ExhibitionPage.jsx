@@ -20,47 +20,32 @@ const EventsPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="container mx-auto mt-8">Loading...</div>;
+    return <div className="container text-pallette-1 text-2xl font-bold mx-auto mt-8">Loading...</div>;
   }
 
   return (
     <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold mb-6">Events</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <h1 className="text-6xl font-bold mb-6 text-center text-pallette-1">Events</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {events.map((event) => (
-          <div key={event.id} className="bg-gray-100 p-6 rounded-lg shadow-lg">
+          <div key={event.id} className="bg-pallette-2 p-4 rounded-3xl shadow-md">
             <img
               src={event.image_url || "https://via.placeholder.com/300"} // Fallback image if image_url is not available
               alt={event.title}
-              className="w-full h-64 object-cover rounded-md mb-4"
+              className="w-full h-64 object-cover rounded-xl border-8 border-white mb-4"
             />
-            <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
-            <p className="text-gray-700 mb-4">{event.short_description}</p>
-            <p>
+            <h3 className="text-2xl text-white text-center font-bold mb-2">{event.title}</h3>
+            <p className="text-white text-xl text-center mb-4">{event.short_description}</p>
+            <p className="text-white text-lg text-center mb-2">
               <strong>Date:</strong> {event.date_display}
             </p>
-            <p>
+            <p className="text-white text-lg text-center mb-2">
               <strong>Location:</strong> {event.location}
             </p>
-            <p>
+            <p className="text-white text-lg text-center mb-4">
               <strong>Time:</strong> {event.start_time} - {event.end_time}
             </p>
-            {event.is_registration_required && event.rsvp_link && (
-              <a
-                href={event.rsvp_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline mt-4 block"
-              ></a>
-            )}
-            <a
-              href={event.api_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline mt-4 block"
-            >
-              More Details
-            </a>
+           
           </div>
         ))}
       </div>

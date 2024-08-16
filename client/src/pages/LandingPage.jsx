@@ -52,7 +52,7 @@ function MainPage() {
   }, []);
 
   if (loading) {
-    return <div className="container mx-auto mt-8 text-center">Loading...</div>;
+    return <div className="container mx-auto mt-8 text-pallette-1 text-2xl font-bold  text-center">Loading...</div>;
   }
 
   if (error) {
@@ -67,7 +67,7 @@ function MainPage() {
     <div className="container bg-white mx-auto mt-8">
       
       <div
-        className="hero-section rounded-3xl bg-cover  bg-center text-white h-max py-32 px-2"
+        className="hero-section   bg-center text-white h-max py-32 px-8"
         style={{
           backgroundImage: `url('https://www.artic.edu/iiif/2/${artworks[5]?.image_id}/full/843,/0/default.jpg')`,
         }}
@@ -126,16 +126,16 @@ function MainPage() {
 
       {/* Collections Section */}
       <section className="collections-section rounded-3xl py-16 bg-[#BB4430] px-4">
-        <div className="max-w-5xl   mx-auto">
-        <Link
-            to="/collections"
-            className="inline-block w-[300px] h-[80px] border-2 border-white rounded-[60px] text-white text-4xl hover:bg-gray-700 font-bold mb-8"
-          >
-            <div className="flex items-center justify-center h-full">
-              Our Collections
-            </div>
-          </Link>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div className="max-w-5xl mx-auto flex flex-col items-center"> 
+    <Link
+      to="/collections"
+      className="inline-block w-[300px] h-[80px] border-2 border-white rounded-[60px] text-white text-4xl hover:bg-gray-700 font-bold mb-8"
+    >
+      <div className="flex items-center justify-center h-full">
+        Our Collections
+      </div>
+    </Link>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {artworks.slice(5, 9).map((artwork) => (
               <div
                 key={artwork.id}
@@ -158,11 +158,16 @@ function MainPage() {
 
       {/* Events Section */}
       <section className="events-section py-16 px-4">
-        <div className="max-w-screen mx-auto">
-          <h2 className="text-4xl text-wh font-bold mb-8">
-            Upcoming Events
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+       <div className="max-w-5xl mx-auto flex flex-col items-center"> 
+    <Link
+      to="/exhibition"
+      className="inline-block w-[300px] h-[80px] border-2 border-pallette-2 rounded-[60px] text-pallette-2 text-4xl hover:bg-gray-700 font-bold mb-8"
+    >
+      <div className="flex items-center justify-center h-full">
+        Events
+      </div>
+    </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {events.map((event) => (
               <div key={event.id} className="bg-[#BB4430] p-6 rounded-3xl shadow-lg">
                 <img

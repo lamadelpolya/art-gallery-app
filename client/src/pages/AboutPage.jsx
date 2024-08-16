@@ -2,12 +2,12 @@ import React from "react";
 
 const AboutPage = () => {
   return (
-    <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-4xl font-bold mb-8">About Our Platform</h1>
+    <div className="container border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">About Our Platform</h1>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold mb-4">Our Mission</h2>
-        <p className="text-lg text-gray-700">
+        <h2 className="text-3xl text-pallette-1 font-bold mb-4">Our Mission</h2>
+        <p className="text-xl font-medium text-pallette-1">
           Welcome to our platform—a digital space dedicated to artists and art
           lovers alike. Our mission is to create a community where artists from
           around the world can share their creations with a global audience. We
@@ -17,14 +17,14 @@ const AboutPage = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold mb-4">What We Offer</h2>
-        <p className="text-lg text-gray-700">
+        <h2 className="text-3xl text-pallette-1 font-bold mb-4">What We Offer</h2>
+        <p className="text-xl font-medium text-pallette-1">
           Our platform is designed to empower artists by providing them with the
           tools they need to showcase their work in a meaningful way. Whether
           you're a painter, sculptor, photographer, or digital artist, you'll
           find a space here to display your art in the form of:
         </p>
-        <ul className="list-disc list-inside ml-4 text-lg text-gray-700 mt-4">
+        <ul className="list-disc list-inside ml-4 text-xl font-medium text-pallette-1 mt-4">
           <li>
             <strong>Exhibitions:</strong> Curate your own virtual exhibitions to
             showcase a collection of your artworks. Each exhibition is a story,
@@ -46,8 +46,8 @@ const AboutPage = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold mb-4">Why We Do It</h2>
-        <p className="text-lg text-gray-700">
+        <h2 className="text-3xl text-pallette-1  font-semibold mb-4">Why We Do It</h2>
+        <p className="text-xl font-medium text-pallette-1">
           We believe that art is meant to be shared. Our goal is to break down
           the barriers that often limit access to the art world, making it
           easier for artists to reach a wider audience and for art lovers to
@@ -57,8 +57,8 @@ const AboutPage = () => {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold mb-4">Join Us</h2>
-        <p className="text-lg text-gray-700">
+        <h2 className="text-3xl text-pallette-1 font-semibold mb-4">Join Us</h2>
+        <p className="text-xl font-medium text-pallette-1">
           Whether you are an artist looking to share your creations, or an art
           lover seeking new inspirations, we invite you to join our community.
           Together, let's celebrate creativity and make art accessible to

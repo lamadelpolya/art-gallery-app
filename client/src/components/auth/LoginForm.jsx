@@ -41,10 +41,12 @@ const LoginForm = () => {
   };
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <form
+<div
+      className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url('/src/assets/back.png')` }}
+    >      <form
         onSubmit={handleSubmit}
-        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
+        className="bg-pallette-1 p-8 rounded-3xl border-4 border-white  shadow-lg w-full max-w-md"
       >
         <h2 className="text-3xl font-bold mb-6 text-center text-white">
           Login
