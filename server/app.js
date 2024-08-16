@@ -41,6 +41,7 @@ app.use("/api/collections", require("./routes/collection.routes"));
 app.use("/api/exhibitions", require("./routes/exhibition.routes"));
 app.use("/api", require("./routes/apiRoutes"));
 
+
 // Endpoint for handling file uploads and other form data
 app.post('/api/artworks', upload.array('artworks[file]'), (req, res) => {
   try {

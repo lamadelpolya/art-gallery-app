@@ -1,18 +1,28 @@
 // models/Artwork.model.js
 
 const mongoose = require("mongoose");
-const { Schema, model } = mongoose;
 
-const artworkSchema = new Schema(
-  {
-    title: { type: String },
-    description: { type: String },
-    imageUrl: { type: String },
-    // user: { type: Schema.Types.ObjectId, ref: 'User', required: true } // Assuming artworks are linked to a user
+const ArtworkSchema = new mongoose.Schema({
+  artistInfo: {
+      name: String,
+      biography: String,
+      email: String,
+      phone: String,
   },
-  {
-    timestamps: true,
+  artworks: [
+      {
+          title: String,
+          description: String,
+          image: String,  // You may store the image URL or file path
+      }
+  ],
+  exhibition: {
+      title: String,
+      description: String,
+      date: Date,
+      location: String,
   }
-);
+}, { timestamps: true });  // This adds the createdAt and updatedAt fields automatically
 
-module.exports = model("Artwork", artworkSchema);
+const ArtModel = mongoose.model('Artwork', ArtworkSchema);
+module.exports = ArtModel;
