@@ -1,56 +1,57 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+// import {handleUpload} from "../components/ProfilePictureUpload"
 import axios from "axios";
 
 const UserProfilePage = () => {
   const { auth, setAuth } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
-  const [uploading, setUploading] = useState(false); // State to manage uploading status
-  const [profileImageUrl, setProfileImageUrl] = useState(auth?.user?.profilePicture || ''); // Initial state for profile image
+  // const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  // const [uploading, setUploading] = useState(false); // State to manage uploading status
+  // const [profileImageUrl, setProfileImageUrl] = useState(auth?.user?.profilePicture || ''); // Initial state for profile image
   const navigate = useNavigate();
 console.log(auth)
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
+  // const handleFileChange = (e) => {
+  //   setSelectedFile(e.target.files[0]);
+  // };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      alert('Please select a file first.');
-      return;
-    }
+  // const handleUpload = async () => {
+  //   if (!selectedFile) {
+  //     alert('Please select a file first.');
+  //     return;
+  //   }
 
-    setUploading(true);
+  //   setUploading(true);
 
-    try {
-      const imageUrl = await uploadImageToCloudinary(selectedFile);
-      setProfileImageUrl(imageUrl);
+  //   try {
+  //     const imageUrl = await uploadImageToCloudinary(selectedFile);
+  //     setProfileImageUrl(imageUrl);
 
-      // Send the image URL to your backend to update the user's profile
-      await axios.post(
-        'http://localhost:5005/api/user/profile-picture',
-        { imageUrl },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        }
-      );
+  //     // Send the image URL to your backend to update the user's profile
+  //     await axios.post(
+  //       'http://localhost:5005/api/user/profile-picture',
+  //       { imageUrl },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${auth.token}`,
+  //         },
+  //       }
+  //     );
 
-      // Update the auth context with the new profile picture
-      setAuth((prev) => ({
-        ...prev,
-        user: { ...prev.user, profilePicture: imageUrl },
-      }));
+  //     // Update the auth context with the new profile picture
+  //     setAuth((prev) => ({
+  //       ...prev,
+  //       user: { ...prev.user, profilePicture: imageUrl },
+  //     }));
 
-      alert('Profile picture uploaded successfully!');
-    } catch (error) {
-      alert('Error uploading profile picture.');
-    } finally {
-      setUploading(false);
-    }
-  };
+  //     alert('Profile picture uploaded successfully!');
+  //   } catch (error) {
+  //     alert('Error uploading profile picture.');
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (!auth.token) {
@@ -117,7 +118,7 @@ console.log(auth)
         </p>
       </section>
 
-      <section className="mb-12">
+      {/* <section className="mb-12">
         <h3 className="text-3xl text-pallette-1 font-bold mb-4">Profile Picture</h3>
         {profileImageUrl && (
           <img
@@ -139,7 +140,7 @@ console.log(auth)
         >
           {uploading ? 'Uploading...' : 'Upload Profile Picture'}
         </button>
-      </section>
+      </section> */}
 
       <div className="flex justify-center mt-8">
         <button

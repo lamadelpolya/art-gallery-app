@@ -15,7 +15,7 @@ import AboutUsPage from "./pages/AboutUs";
 import CollectionsPage from "./pages/CollectionsPage";
 import ExhibitionsPage from "./pages/ExhibitionPage";
 import UserDashboard from "./pages/UserDashboard";
-
+import ExhibitionForm from "./components/artworks/ExhibitionForm";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,19 +29,18 @@ function App() {
           <Route path="/main" element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/edit-profile" element={<EditProfilePage/>} />
+          <Route path="/edit-profile" element={<EditProfilePage />} />
           <Route path="/submit-art" element={<ArtistSubmissionForm />} />
+          <Route path="/create-exhibition" element={<ExhibitionForm />} />
+
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/aboutus" element={<AboutUsPage />} />
-          <Route path="/collections" element={<CollectionsPage/>} />
-          <Route path="/exhibitions" element={<ExhibitionsPage/>} />
-          <Route path="/dashboard" element={<UserDashboard/>} />
-          <Route
-          
-          />
-       
+          <Route path="/collections" element={<CollectionsPage />} />
+          <Route path="/exhibitions" element={<ExhibitionsPage />} />
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route />
         </Routes>
       </main>
       <Footer />
