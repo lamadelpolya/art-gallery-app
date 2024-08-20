@@ -6,7 +6,6 @@ const Exhibition = require("../models/exhibition.model");
 const User = require("../models/User.model");
 const authMiddleware = require("../middleware/auth.middleware");
 const fileUploader = require("../config/cloudinary.config");
-const Artwork = require("../models/art.model");
 router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
   if (!req.file) {
     next(new Error("No file uploaded!"));
@@ -16,7 +15,7 @@ router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
   // Send back the URL of the uploaded file
 });
 router.post('/artworks', (req, res, next) => {
-  Artwork.create(req.body)
+  Art.create(req.body)
     .then(createdArtwork => res.status(200).json(createdArtwork))
     .catch(err => next(err));
 });
