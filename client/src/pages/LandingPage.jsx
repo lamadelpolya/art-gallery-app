@@ -160,7 +160,7 @@ function MainPage() {
       <section className="events-section py-16 px-4">
        <div className="max-w-5xl mx-auto flex flex-col items-center"> 
     <Link
-      to="/exhibition"
+      to="/exhibitions"
       className="inline-block w-[300px] h-[80px] border-2 border-pallette-2 rounded-[60px] text-pallette-2 text-4xl hover:bg-gray-700 font-bold mb-8"
     >
       <div className="flex items-center justify-center h-full">

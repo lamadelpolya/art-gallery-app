@@ -12,9 +12,9 @@ const ArtistSubmissionForm = () => {
   const [artworks, setArtworks] = useState([]);
   const [exhibition, setExhibition] = useState({
     title: "",
+    artist: "",
     description: "",
     date: "",
-    location: "",
   });
 
   // Handle artist information input

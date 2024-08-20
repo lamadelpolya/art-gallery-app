@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const ExhibitionSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String },
   description: { type: String },
-  date: { type: Date, required: true },
-  location: { type: String, required: true },
-  artworks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Art' }],
-  artist: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  date: { type: Date },
+  location: { type: String},
+  artworks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'artworks' }],
+  artist: { type: mongoose.Schema.Types.ObjectId, ref: 'user'},
 });
 
 const Exhibition = mongoose.model('Exhibition', ExhibitionSchema);

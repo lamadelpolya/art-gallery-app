@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const User = require('../models/User.model')
+const Art = require ('../models/art.model')
 const Exhibition = require("../models/exhibition.model");
 const verifyToken = require("../middleware/auth.middleware");
 
-router.post("/", verifyToken, async (req, res) => {
-  const { title, description, artworks, startDate, endDate } = req.body;
+router.post("/exhibitions", verifyToken, async (req, res) => {
+  const { title, description, artworks, date, location } = req.body;
   const artist = req.user.id;
 
   try {
@@ -13,8 +15,8 @@ router.post("/", verifyToken, async (req, res) => {
       description,
       artworks,
       artist,
-      startDate,
-      endDate,
+      date,
+      location,
     });
     await newExhibition.save();
     res.status(201).json(newExhibition);
@@ -23,17 +25,24 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
+router.get("/:userId/exhibitions", async (req, res) => {
+  try { 
     const exhibitions = await Exhibition.find()
-      .populate("artist", "name email")
-      .populate("artworks");
+      .populate("user")
+      // .populate("artworks");
     res.json(exhibitions);
+  } catch (error) { 
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get('/artworks', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('profileArtworks');
+    res.json(user.profileArtworks);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 router.get("/:id", async (req, res) => {
   try {
     const exhibition = await Exhibition.findById(req.params.id)
@@ -48,11 +57,11 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", verifyToken, async (req, res) => {
-  const { title, description, artworks, startDate, endDate } = req.body;
+  const { title, description, artworks, date, location } = req.body;
   try {
     const updatedExhibition = await Exhibition.findByIdAndUpdate(
       req.params.id,
-      { title, description, artworks, startDate, endDate },
+      { title, description, artworks, date, location },
       { new: true }
     );
     if (!updatedExhibition)

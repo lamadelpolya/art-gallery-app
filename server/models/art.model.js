@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose");
 
-const ArtworkSchema = new mongoose.Schema({
+const ArtSchema = new mongoose.Schema({
   artistInfo: {
       name: String,
       biography: String,
@@ -24,5 +24,5 @@ const ArtworkSchema = new mongoose.Schema({
   }
 }, { timestamps: true });  // This adds the createdAt and updatedAt fields automatically
 
-const ArtModel = mongoose.model('Artwork', ArtworkSchema);
-module.exports = ArtModel;
+const Art = mongoose.model('Art', ArtSchema);
+module.exports = Art;
