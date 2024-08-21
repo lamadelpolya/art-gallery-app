@@ -26,47 +26,21 @@ router.get("/users", authMiddleware, async (req, res) => {
   }
 });
 
-// Update user profile picture and other details
-router.put(
-  "/update",
-  authMiddleware,
-  upload.single("profilePicture"),
-  async (req, res) => {
-    try {
-      const { name, email, biography, phone } = req.body;
-      console.log(req.body)
-      const updatedFields = { name, email, biography, phone };
-
-      if (req.file) {
-        // Handle file upload to Cloudinary
-        const result = await new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "profile-pictures" },
-            (error, result) => {
-              if (result) resolve(result);
-              else reject(error);
-            }
-          );
-          uploadStream.end(req.file.buffer);
-        });
-
-        updatedFields.profilePicture = result.secure_url; // Save the URL to the database
-      }
-
-      const user = await User.findByIdAndUpdate(
-        req.user.id,
-        { $set: updatedFields },
-        { new: true }
-      );
-
-      console.log(user)
-
-      res.json(user);
-    } catch (error) {
-      console.error("Update error:", error);
-      res.status(500).json({ error: "Server error" });
-    }
+// Example in your backend (assuming Node.js and Express)
+router.put("/update", authMiddleware, async (req, res) => {
+  try {
+    const { profilePicture } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { profilePicture },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(500).json({ error: "Server error" });
   }
-);
+});
+
 
 module.exports = router;

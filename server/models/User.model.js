@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   biography: { type: String },
   phone: { type: String },
   role: { type: String },
-  
+  // profilePicture: { type: String },
 });
 
 const User = mongoose.model("User", UserSchema);
