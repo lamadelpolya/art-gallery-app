@@ -152,10 +152,11 @@ const Navbar = forwardRef(({ toggleSidebar }, ref) => {
                 className="btn btn-ghost btn-square avatar"
               >
                 <Link to="/profile">
-                  <div className="w-10 rounded-full">
+                  <div className="w-12 h-12 rounded-full border-2 border-pallette-1 overflow-hidden">
                     <img
                       alt="User Avatar"
                       src={auth.user.profilePicture || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                      className="object-cover w-full h-full"
                     />
                   </div>
                 </Link>
