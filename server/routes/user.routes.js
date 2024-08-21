@@ -1,4 +1,3 @@
-// server/routes/user.routes.js
 const express = require("express");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
@@ -19,6 +18,9 @@ const upload = multer({ storage }); // Initialize multer with memory storage
 router.get("/users", authMiddleware, async (req, res) => {
   try {
     const foundUser = await User.findById(req.user.id);
+    if (!foundUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
     res.json(foundUser);
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -26,21 +28,38 @@ router.get("/users", authMiddleware, async (req, res) => {
   }
 });
 
-// Example in your backend (assuming Node.js and Express)
-router.put("/update", authMiddleware, async (req, res) => {
+// Update user details
+router.put("/update", authMiddleware, upload.single("profilePicture"), async (req, res) => {
   try {
-    const { profilePicture } = req.body;
+    const { name, email, biography, phone } = req.body;
+
+    // If profilePicture is uploaded, handle Cloudinary upload
+    let profilePictureUrl;
+    if (req.file) {
+      const result = await cloudinary.uploader.upload_stream({
+        resource_type: "image",
+        folder: "profile_pictures",
+      }, req.file.buffer);
+      profilePictureUrl = result.secure_url;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
-      { profilePicture },
+      {
+        name,
+        email,
+        biography,
+        phone,
+        profilePicture: profilePictureUrl || req.body.profilePicture,
+      },
       { new: true }
     );
+
     res.json(updatedUser);
   } catch (error) {
     console.error("Update error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 module.exports = router;
