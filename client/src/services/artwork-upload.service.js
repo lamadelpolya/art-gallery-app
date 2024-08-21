@@ -9,7 +9,7 @@ const errorHandler = (err) => {
 };
 
 const uploadImage = (file) => {
-  return api.post("/upload", file)
+  return api.post("/artworks", file)
     .then(res => res.data)
     .catch(errorHandler);
 };
@@ -19,8 +19,14 @@ const createArtwork = (newArtwork) => {
     .then(res => res.data)
     .catch(errorHandler);
 };
-
+const getArtworks = () => {
+  return api.get("/artworks")
+    .then(res => res.data)
+    .catch(errorHandler);
+};
 export default {
   uploadImage,
-  createArtwork
+  createArtwork,
+  getArtworks
 };
+
