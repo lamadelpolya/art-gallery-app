@@ -16,6 +16,8 @@ import CollectionsPage from "./pages/CollectionsPage";
 import ExhibitionsPage from "./pages/ExhibitionPage";
 import UserDashboard from "./pages/UserDashboard";
 import ExhibitionForm from "./components/artworks/ExhibitionForm";
+import DetailsCollectionPage from "./pages/DetailsCollectionsPage";
+import ExhibitionsDetailsPage from "./pages/ExhibitionDetailsPage";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,7 +40,15 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/aboutus" element={<AboutUsPage />} />
           <Route path="/collections" element={<CollectionsPage />} />
+          <Route
+            path="/collections-details/:id"
+            element={<DetailsCollectionPage />}
+          />
           <Route path="/exhibitions" element={<ExhibitionsPage />} />
+          <Route
+            path="/exhibition-details/:id"
+            element={<ExhibitionsDetailsPage />}
+          />
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route />
         </Routes>
