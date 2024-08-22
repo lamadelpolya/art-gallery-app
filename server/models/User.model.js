@@ -1,31 +1,28 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
+    name: { type: String },
+    email: { type: String, unique: true },
+    biography: String,
+    phone: String,
+    profilePicture: String,
+    socialLinks: {
+      facebook: String,
+      twitter: String,
+      instagram: String,
+      linkedin: String,
     },
-    email: {
-      type: String,
-      unique: true,
-    },
-    password: {
-      type: String,
-    },
-    biography: {
-      type: String,
-    },
-    phone: {
-      type: String,
-    },
-    profilePicture: {
-      type: String, // This will store the URL of the uploaded profile picture
-      default: "", // Default value can be an empty string or a default image URL
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zip: String,
+      country: String,
     },
   },
-  {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
-  }
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", userSchema);
+module.exports = User;
