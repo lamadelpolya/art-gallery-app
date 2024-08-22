@@ -60,6 +60,12 @@ router.get("/search", async (req, res) => {
       res.status(500).json({ error: "Failed to search" });
     }
   });
+//   try {
+//     const artworks = await Artworks.find(filters).populate('artist');
+//     res.json(artworks);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to search artworks' });
+//   }
 });
 
 router.get("/artist/:id", async (req, res) => {

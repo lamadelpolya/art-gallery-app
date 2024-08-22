@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
         }
       }
     };
+
     checkAuth();
   }, [token]);
 
@@ -57,8 +58,26 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
+  const refreshUserData = async () => {
+    if (auth.token) {
+      try {
+        const response = await axios.get("http://localhost:5005/api/auth/users", {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+        setAuth((prev) => ({
+          ...prev,
+          user: response.data,
+        }));
+      } catch (error) {
+        console.error("Failed to refresh user data:", error);
+      }
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth, login, logout }}>
+    <AuthContext.Provider value={{ auth, setAuth, login, logout, refreshUserData }}>
       {children}
     </AuthContext.Provider>
   );

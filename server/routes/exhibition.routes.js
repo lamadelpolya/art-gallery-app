@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require('../models/User.model')
-const Art = require ('../models/art.model')
+const Artwork = require ('../models/art.model')
 const Exhibition = require("../models/exhibition.model");
 const verifyToken = require("../middleware/auth.middleware");
 

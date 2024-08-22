@@ -10,12 +10,8 @@ const ArtistSubmissionForm = () => {
     phone: "",
   });
   const [artworks, setArtworks] = useState([]);
-  const [exhibition, setExhibition] = useState({
-    title: "",
-    artist: "",
-    description: "",
-    date: "",
-  });
+  const [image, setImage] = useState(null); // State to store image file
+  const [imageUrl, setImageUrl] = useState(""); // State to store image URL after upload
 
   // Handle artist information input
   const handleArtistInfoChange = (e) => {
@@ -46,15 +42,32 @@ const ArtistSubmissionForm = () => {
     setArtworks(newArtworks);
   };
 
-  // Handle exhibition input
-  const handleExhibitionChange = (e) => {
-    const { name, value } = e.target;
-    setExhibition({
-      ...exhibition,
-      [name]: value,
-    });
+  // Upload image to Cloudinary
+  const uploadImage = async () => {
+    if (!image) {
+      alert("Please select an image to upload.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "artramuseum");
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dp5pdktmv/image/upload",
+        data
+      );
+      const imageUrl = res.data.url;
+      setImageUrl(imageUrl);
+      alert("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
+    }
   };
 
+  // Handle form navigation
   const handleNextStep = () => {
     setStep(step + 1);
   };
@@ -65,13 +78,16 @@ const ArtistSubmissionForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
         "http://localhost:5005/api/artworks",
         {
           artistInfo,
-          artworks,
-          exhibition,
+          artworks: artworks.map((artwork) => ({
+            ...artwork,
+            image: imageUrl,
+          })), // Include image URL in artwork data
         },
         {
           headers: {
@@ -81,9 +97,7 @@ const ArtistSubmissionForm = () => {
       );
       console.log("Artwork submitted successfully:", response.data);
       alert("Artwork submitted successfully!");
-
       window.location.href = "/dashboard";
-
     } catch (error) {
       console.error("Error submitting artwork:", error);
       alert("Failed to submit artwork. Please try again.");
@@ -95,7 +109,6 @@ const ArtistSubmissionForm = () => {
       className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url('/src/assets/back.png')` }}
     >
-      {" "}
       <form
         onSubmit={handleSubmit}
         className="bg-pallette-1 border-4 border-white p-8 rounded-3xl shadow-lg w-full max-w-xl"
@@ -210,10 +223,17 @@ const ArtistSubmissionForm = () => {
                   <input
                     type="file"
                     name="file"
-                    onChange={(e) => handleArtworkChange(index, e)}
+                    onChange={(e) => setImage(e.target.files[0])}
                     className="file-input file-input-bordered w-full max-w-xs text-black"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={uploadImage}
+                    className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[20px] font-semibold px-4 py-2 mt-2"
+                  >
+                    Upload Image
+                  </button>
                 </div>
                 <div className="flex justify-center">
                   <button
@@ -259,53 +279,6 @@ const ArtistSubmissionForm = () => {
             <h2 className="text-3xl font-bold mb-6 text-center text-white">
               Step 3: Exhibition Creation (Optional)
             </h2>
-            <div className="mb-4">
-              <label className="block text-xl text-white font-bold mb-2">
-                Exhibition Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={exhibition.title}
-                onChange={handleExhibitionChange}
-                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-xl text-white font-bold mb-2">
-                Description
-              </label>
-              <textarea
-                name="description"
-                value={exhibition.description}
-                onChange={handleExhibitionChange}
-                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-xl text-white font-bold mb-2">
-                Date
-              </label>
-              <input
-                type="date"
-                name="date"
-                value={exhibition.date}
-                onChange={handleExhibitionChange}
-                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-xl text-white font-bold mb-2">
-                Location
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={exhibition.location}
-                onChange={handleExhibitionChange}
-                className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
-              />
-            </div>
             <div className="flex justify-between">
               <button
                 type="button"

@@ -6,6 +6,7 @@ import axios from "axios";
 const UserProfilePage = () => {
   const { auth, setAuth, login } = useAuth();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -35,6 +36,42 @@ const UserProfilePage = () => {
       };
 
       fetchUserData();
+  const uploadImage = async () => {
+    if (!image) {
+      alert("Please select an image to upload.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "artramuseum");
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dp5pdktmv/image/upload",
+        data
+      );
+      const imageUrl = res.data.url;
+
+      await axios.put(
+        "http://localhost:5005/api/auth/update",
+        { profilePicture: imageUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+
+      setAuth((prev) => ({
+        ...prev,
+        user: { ...prev.user, profilePicture: imageUrl },
+      }));
+
+      alert("Profile picture uploaded and updated successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload and update profile picture. Please try again.");
     }
     console.log(auth);
   }, [token, jwtToken]);
@@ -67,6 +104,7 @@ const UserProfilePage = () => {
           console.error("Error during auth check:", error);
           setAuth({ isAuthenticated: false, user: null, token: null });
           setError("Failed to load user data.");
+
         }
       };
 
@@ -77,17 +115,52 @@ const UserProfilePage = () => {
       // return;
     }
   }, [jwtToken, token]);
+// =======
+//         setAuth((prev) => ({
+//           ...prev,
+//           isAuthenticated: true,
+//           user: response.data,
+//         }));
+//       } catch (error) {
+//         console.error("Error fetching user data:", error);
+//         setAuth({ isAuthenticated: false, user: null, token: null });
+//         setError("Failed to load user data.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchUserData();
+//   }, [auth.token, setAuth]);
+// >>>>>>> main
+
+  if (loading) {
+    return <div className="text-center text-gray-500 mt-10">Loading...</div>;
+  }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="text-center text-red-500 mt-10">{error}</div>;
   }
 
   if (!auth.token) {
-    return <div>Please log in to view your profile.</div>;
+    return (
+      <div className="text-center text-red-500 mt-10">
+        Please log in to view your profile.
+      </div>
+    );
   }
 
   return (
-    <div className="container border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="container relative border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+      {auth?.user?.profilePicture && (
+        <div className="absolute top-0 right-0 mt-4 mr-4">
+          <img
+            src={auth.user.profilePicture}
+            alt="Profile"
+            className="w-40 h-40 rounded-full object-cover border-4 border-pallette-1"
+          />
+        </div>
+      )}
       <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">
         User Profile
       </h1>
@@ -120,6 +193,8 @@ const UserProfilePage = () => {
       <div className="flex justify-center mb-4">
         <input
           type="file"
+
+//           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
           className="mb-2"
         />
@@ -128,6 +203,10 @@ const UserProfilePage = () => {
           className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
         >
           Upload image
+//           onClick={uploadImage}
+//           className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
+//         >
+//           Upload Image
         </button>
       </div>
       <div className="flex justify-center mt-8">
