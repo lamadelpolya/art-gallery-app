@@ -134,6 +134,21 @@ const UserProfilePage = () => {
         <p className="text-xl font-medium text-pallette-1">
           <strong>Phone:</strong> {auth?.user?.phone}
         </p>
+        <p className="text-xl font-medium text-pallette-1">
+          <strong>Facebook:</strong> {auth?.user?.socialLinks?.facebook || 'N/A'}
+        </p>
+        <p className="text-xl font-medium text-pallette-1">
+          <strong>Twitter:</strong> {auth?.user?.socialLinks?.twitter || 'N/A'}
+        </p>
+        <p className="text-xl font-medium text-pallette-1">
+          <strong>Instagram:</strong> {auth?.user?.socialLinks?.instagram || 'N/A'}
+        </p>
+        <p className="text-xl font-medium text-pallette-1">
+          <strong>LinkedIn:</strong> {auth?.user?.socialLinks?.linkedin || 'N/A'}
+        </p>
+        <p className="text-xl font-medium text-pallette-1">
+          <strong>Address:</strong> {auth?.user?.address?.street || 'N/A'}, {auth?.user?.address?.city || 'N/A'}, {auth?.user?.address?.state || 'N/A'}, {auth?.user?.address?.country || 'N/A'}
+        </p>
       </section>
       <div className="flex justify-center mb-4">
         <input
