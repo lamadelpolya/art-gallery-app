@@ -17,8 +17,10 @@ const upload = multer({ storage }); // Initialize multer with memory storage
 
 // Get user details
 router.get("/users", authMiddleware, async (req, res) => {
+  console.log(req.user);
   try {
-    const foundUser = await User.findById(req.user.id);
+    const foundUser = await User.findById(req.user._id);
+    console.log(foundUser);
     res.json(foundUser);
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -41,6 +43,5 @@ router.put("/update", authMiddleware, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 module.exports = router;

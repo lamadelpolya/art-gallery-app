@@ -8,6 +8,9 @@ const UserSchema = new mongoose.Schema({
   biography: { type: String },
   phone: { type: String },
   role: { type: String },
+  googleId: { type: String },
+  photo: String,
+
   // profilePicture: { type: String },
 });
 

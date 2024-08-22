@@ -32,6 +32,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Additional Configurations
 require("./config")(app);
+const passport = require("passport");
+require("./config/passport");
+require("dotenv").config();
 
 // Routes
 app.use("/api", require("./routes/art.routes"));
