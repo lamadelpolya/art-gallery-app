@@ -32,19 +32,24 @@ const LoginForm = () => {
         setError(data.message);
         return;
       }
-      localStorage.setItem("token", data.token); // Save token to localStorage
 
+      localStorage.setItem("token", data.token); // Save token to localStorage
       navigate("/profile"); // Navigate to user profile page
     } catch (error) {
       setError(error.message);
     }
   };
-  
+
+  const handleGoogleLogin = () => {
+    window.location.href = "/api/auth/google"; // URL para autenticación con Google
+  };
+
   return (
-<div
+    <div
       className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url('/src/assets/back.png')` }}
-    >      <form
+    >
+      <form
         onSubmit={handleSubmit}
         className="bg-pallette-1 p-8 rounded-3xl border-4 border-white  shadow-lg w-full max-w-md"
       >
@@ -81,8 +86,20 @@ const LoginForm = () => {
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <div className="flex justify-center">
-          <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy">
+          <button
+            type="submit"
+            className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4 fy"
+          >
             Login
+          </button>
+        </div>
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Login with Google
           </button>
         </div>
       </form>
