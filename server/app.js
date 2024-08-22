@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const connectDB = require("./config/db-config"); // Import the connection module
 const multer = require("multer");
 const path = require("path");
-const Art = require("./models/art.model");
+const Artwork = require("./models/art.model");
 
 const app = express();
 

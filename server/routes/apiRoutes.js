@@ -27,7 +27,7 @@ router.get('/search', async (req, res) => {
   }
 
   try {
-    const artworks = await Art.find(filters).populate('artist');
+    const artworks = await Artworks.find(filters).populate('artist');
     res.json(artworks);
   } catch (error) {
     res.status(500).json({ error: 'Failed to search artworks' });
