@@ -99,10 +99,7 @@ const ProfileUpdateForm = () => {
             <label className="block text-xl text-white font-bold mb-2">Phone</label>
             <input type="tel" name="phone" value={userInfo.phone} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" />
           </div>
-          <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">Profile Picture</label>
-            <input type="file" name="profilePicture" onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" />
-          </div>
+         
           <div className="flex justify-center">
             <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4">Update Profile</button>
           </div>

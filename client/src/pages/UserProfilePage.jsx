@@ -21,7 +21,10 @@ const UserProfilePage = () => {
     data.append("upload_preset", "artramuseum");
 
     try {
-      const res = await axios.post("https://api.cloudinary.com/v1_1/dp5pdktmv/image/upload", data);
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dp5pdktmv/image/upload",
+        data
+      );
       const imageUrl = res.data.url;
 
       await axios.put(
@@ -55,11 +58,14 @@ const UserProfilePage = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:5005/api/auth/users", {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:5005/api/auth/users",
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          }
+        );
 
         if (response.status !== 200) {
           throw new Error("Failed to fetch user data");
@@ -91,7 +97,11 @@ const UserProfilePage = () => {
   }
 
   if (!auth.token) {
-    return <div className="text-center text-red-500 mt-10">Please log in to view your profile.</div>;
+    return (
+      <div className="text-center text-red-500 mt-10">
+        Please log in to view your profile.
+      </div>
+    );
   }
 
   return (

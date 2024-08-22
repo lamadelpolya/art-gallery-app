@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ArtistSubmissionForm from '../components/artworks/ArtistSubmissionForm'; // Import the form component
 
 const UserDashboard = () => {
   const [artworks, setArtworks] = useState([]);
-  const [exhibitions, setExhibitions] = useState([]);
+
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
@@ -22,22 +23,10 @@ const UserDashboard = () => {
     fetchArtworks();
   }, []);
 
-  useEffect(() => {
-    const fetchExhibitions = async () => {
-      try {
-        const response = await axios.get("http://localhost:5005/api/exhibitions", {
-          headers: {
-            authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        });
-        setExhibitions(response.data);
-      } catch (error) {
-        console.error("Error fetching exhibitions :", error);
-      }
-    };
+  const handleAddArtwork = (newArtworks) => {
+    setArtworks((prevArtworks) => [...prevArtworks, ...newArtworks]);
+  };
 
-    fetchExhibitions();
-  }, []);
   return (
     <div className="container border-8 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-2xl shadow-md">
       <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">My Dashboard</h1>
@@ -52,18 +41,18 @@ const UserDashboard = () => {
             Submit New Artwork
           </Link>
         </div>
-      </section>
-      <section className="mb-12">
-        <h2 className="text-3xl text-pallette-1 font-bold mb-4">My Exhibitions</h2>
-        <p className="text-xl text-pallette-1 mb-4">
-          Create your new exhibition and announce it. You can view, edit, or delete your existing artworks or add new ones.
-        </p>
-        <div className="flex justify-center mt-4">
-          <Link to="/create-exhibition" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4">
-            Create New Exhibition
-          </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          {artworks.map((artwork) => (
+            <div key={artwork._id} className="border border-gray-300 p-4 rounded-lg">
+              <h3 className="text-2xl font-semibold">{artwork.title}</h3>
+              <p className="text-gray-600">{artwork.description}</p>
+              {artwork.image && <img src={artwork.image} alt={artwork.title} className="mt-2 rounded-lg" />}
+            </div>
+          ))}
         </div>
       </section>
+
+      {/* Add the ArtistSubmissionForm and pass handleAddArtwork as a prop */}
 
       <section className="mb-12">
         <h2 className="text-3xl text-pallette-1 font-bold mb-4">My Collections</h2>
