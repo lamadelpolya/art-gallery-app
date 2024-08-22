@@ -18,11 +18,14 @@ const upload = multer({ storage });
 
 // Get user details
 router.get("/users", authMiddleware, async (req, res) => {
+  console.log(req.user);
   try {
-    const foundUser = await User.findById(req.user.id);
-    if (!foundUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    const foundUser = await User.findById(req.user._id);
+    console.log(foundUser);
+//     const foundUser = await User.findById(req.user.id);
+//     if (!foundUser) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
     res.json(foundUser);
   } catch (error) {
     console.error("Error fetching user:", error.message);

@@ -1,15 +1,41 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
 const UserProfilePage = () => {
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth, setAuth, login } = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const jwtToken = localStorage.getItem("token");
+  const token = searchParams.get("token");
+  useEffect(() => {
+    if (token && !jwtToken) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:5005/api/auth/users",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const userData = response.data;
+          login(userData, token); // Usa la función login del contexto
 
+          // Elimina el token de la URL
+          const newUrl = window.location.pathname;
+          window.history.replaceState(null, "", newUrl);
+          navigate("/profile");
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          setError("Failed to fetch user data.");
+        }
+      };
+
+      fetchUserData();
   const uploadImage = async () => {
     if (!image) {
       alert("Please select an image to upload.");
@@ -47,46 +73,66 @@ const UserProfilePage = () => {
       console.error("Error uploading image:", error);
       alert("Failed to upload and update profile picture. Please try again.");
     }
-  };
+    console.log(auth);
+  }, [token, jwtToken]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!auth.token) {
-        setError("Please log in to view your profile.");
-        setLoading(false);
-        return;
-      }
+    if (!token && jwtToken) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:5005/api/auth/users",
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          );
 
-      try {
-        const response = await axios.get(
-          "http://localhost:5005/api/auth/users",
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
+          if (response.status !== 200) {
+            throw new Error("Failed to fetch user data");
           }
-        );
+          console.log(response);
+          login(response.data, jwtToken);
+          // login(userData, token);
+          // setAuth((prev) => ({
+          //   ...prev,
+          //   isAuthenticated: true,
+          //   user: response.data,
+          // }));
+        } catch (error) {
+          console.error("Error during auth check:", error);
+          setAuth({ isAuthenticated: false, user: null, token: null });
+          setError("Failed to load user data.");
 
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch user data");
         }
+      };
 
-        setAuth((prev) => ({
-          ...prev,
-          isAuthenticated: true,
-          user: response.data,
-        }));
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setAuth({ isAuthenticated: false, user: null, token: null });
-        setError("Failed to load user data.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      fetchData();
+      // console.error("Token is not available. redirect to login");
+      // setError("Please log in to view your profile.");
+      // navigate("/login");
+      // return;
+    }
+  }, [jwtToken, token]);
+// =======
+//         setAuth((prev) => ({
+//           ...prev,
+//           isAuthenticated: true,
+//           user: response.data,
+//         }));
+//       } catch (error) {
+//         console.error("Error fetching user data:", error);
+//         setAuth({ isAuthenticated: false, user: null, token: null });
+//         setError("Failed to load user data.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
 
-    fetchUserData();
-  }, [auth.token, setAuth]);
+//     fetchUserData();
+//   }, [auth.token, setAuth]);
+// >>>>>>> main
 
   if (loading) {
     return <div className="text-center text-gray-500 mt-10">Loading...</div>;
@@ -153,15 +199,20 @@ const UserProfilePage = () => {
       <div className="flex justify-center mb-4">
         <input
           type="file"
-          accept="image/*"
+
+//           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
           className="mb-2"
         />
         <button
-          onClick={uploadImage}
+          // onClick={uploadImage}
           className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
         >
-          Upload Image
+          Upload image
+//           onClick={uploadImage}
+//           className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
+//         >
+//           Upload Image
         </button>
       </div>
       <div className="flex justify-center mt-8">

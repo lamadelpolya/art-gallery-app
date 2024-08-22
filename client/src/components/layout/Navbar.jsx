@@ -89,9 +89,9 @@ const Navbar = () => {
           </div>
         </div>
         <div className="navbar-center text-pallette-1">
-          <a className="btn btn-ghost items-center text-6xl">
+          <div className="btn btn-ghost items-center text-6xl">
             <Link to="/main">ARTRA</Link>
-          </a>
+          </div>
         </div>
         <div className="navbar-end flex items-center">
           <button
@@ -162,8 +162,12 @@ const Navbar = () => {
                   <div className="w-12 h-12 rounded-full border-2 border-pallette-1 overflow-hidden">
                     <img
                       alt="User Avatar"
-                      src={auth.user.profilePicture || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
-                      className="object-cover w-full h-full"
+
+                      src={
+                        auth?.user?.profilePicture ||
+                        "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      }
+
                     />
                   </div>
                 </Link>
