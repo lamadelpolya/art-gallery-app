@@ -10,7 +10,6 @@ const ProfileUpdateForm = () => {
     email: "",
     biography: "",
     phone: "",
-    profilePicture: "", // Handle file upload
   });
 
   const navigate = useNavigate();
@@ -18,17 +17,19 @@ const ProfileUpdateForm = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get("http://localhost:5005/api/auth/users", {
-          headers: {
-            authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:5005/api/auth/users",
+          {
+            headers: {
+              authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
         setUserInfo({
-          name: response.data.name,
-          email: response.data.email,
-          biography: response.data.biography,
-          phone: response.data.phone,
-          profilePicture: response.data.profilePicture, 
+          name: response.data.name || "",
+          email: response.data.email || "",
+          biography: response.data.biography || "",
+          phone: response.data.phone || "",
         });
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -38,20 +39,21 @@ const ProfileUpdateForm = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setUserInfo((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    const { name, value } = e.target;
+    setUserInfo({
+      ...userInfo,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    for (let key in userInfo) {
-      formData.append(key, userInfo[key]);
-    }
+    formData.append("name", userInfo.name || "");
+    formData.append("email", userInfo.email || "");
+    formData.append("biography", userInfo.biography || "");
+    formData.append("phone", userInfo.phone || "");
 
     try {
       const response = await axios.put(
@@ -65,13 +67,16 @@ const ProfileUpdateForm = () => {
         }
       );
 
-      setAuth((prev) => ({
-        ...prev,
-        user: response.data,
-      }));
+      // Assuming the updated user data is in response.data
+      setUserInfo({
+        name: response.data.name,
+        email: response.data.email,
+        biography: response.data.biography,
+        phone: response.data.phone,
+      });
 
       alert("Profile updated successfully!");
-      navigate("/profile"); 
+      navigate("/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");
@@ -79,29 +84,75 @@ const ProfileUpdateForm = () => {
   };
 
   return (
-    <div className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center bg-scroll" style={{ backgroundImage: `url('/src/assets/back.png')` }}>
-      <form onSubmit={handleSubmit} className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md">
+    <div
+      className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center bg-scroll"
+      style={{ backgroundImage: `url('/src/assets/back.png')` }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
+      >
         <fieldset>
-          <h2 className="text-3xl font-bold mb-6 text-center text-white">Update Profile</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-white">
+            Update Profile
+          </h2>
           <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">Name <sup className="text-red-500">*</sup></label>
-            <input type="text" name="name" value={userInfo.name} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" required />
+            <label className="block text-xl text-white font-bold mb-2">
+              Name <sup className="text-red-500">*</sup>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={userInfo.name || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+              required
+            />
           </div>
           <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">Email <sup className="text-red-500">*</sup></label>
-            <input type="email" name="email" value={userInfo.email} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" required />
+            <label className="block text-xl text-white font-bold mb-2">
+              Email <sup className="text-red-500">*</sup>
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={userInfo.email || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+              required
+            />
           </div>
           <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">Biography</label>
-            <textarea name="biography" value={userInfo.biography} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" />
+            <label className="block text-xl text-white font-bold mb-2">
+              Biography
+            </label>
+            <textarea
+              name="biography"
+              value={userInfo.biography || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+            />
           </div>
           <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">Phone</label>
-            <input type="tel" name="phone" value={userInfo.phone} onChange={handleInputChange} className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none" />
+            <label className="block text-xl text-white font-bold mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={userInfo.phone || ""}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
+            />
           </div>
-         
+
           <div className="flex justify-center">
-            <button type="submit" className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4">Update Profile</button>
+            <button
+              type="submit"
+              className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"
+            >
+              Update Profile
+            </button>
           </div>
         </fieldset>
       </form>
