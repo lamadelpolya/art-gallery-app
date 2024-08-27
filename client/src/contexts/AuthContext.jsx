@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -11,10 +10,9 @@ export function AuthProvider({ children }) {
     token: localStorage.getItem("token"),
   });
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const checkAuth = async () => {
+      const token = auth.token;
       if (token) {
         try {
           const response = await axios.get(
@@ -28,7 +26,7 @@ export function AuthProvider({ children }) {
           setAuth({
             isAuthenticated: true,
             user: response.data,
-            token: token, // Mantén el token actual
+            token,
           });
         } catch (error) {
           setAuth({ isAuthenticated: false, user: null, token: null });
@@ -37,7 +35,7 @@ export function AuthProvider({ children }) {
       }
     };
     checkAuth();
-  }, [token]);
+  }, [auth.token]);
 
   const login = (userData, token) => {
     setAuth({

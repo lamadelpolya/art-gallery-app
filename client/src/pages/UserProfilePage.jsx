@@ -1,93 +1,98 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
 const UserProfilePage = () => {
-  const { auth, setAuth, login } = useAuth();
+  const { auth, login, setAuth } = useAuth();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const tokenFromUrl = searchParams.get("token");
   const jwtToken = localStorage.getItem("token");
-  const token = searchParams.get("token");
-  useEffect(() => {
-    if (token && !jwtToken) {
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(
-            "http://localhost:5005/api/auth/users",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          const userData = response.data;
-          login(userData, token); // Usa la función login del contexto
-
-          // Elimina el token de la URL
-          const newUrl = window.location.pathname;
-          window.history.replaceState(null, "", newUrl);
-          navigate("/profile");
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setError("Failed to fetch user data.");
-        }
-      };
-
-      fetchUserData();
-    }
-    console.log(auth);
-  }, [token, jwtToken]);
 
   useEffect(() => {
-    if (!token && jwtToken) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            "http://localhost:5005/api/auth/users",
-            {
-              headers: {
-                Authorization: `Bearer ${jwtToken}`,
-              },
-            }
-          );
-
-          if (response.status !== 200) {
-            throw new Error("Failed to fetch user data");
+    const fetchUserData = async (token) => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5005/api/auth/users",
+          {
+            headers: { Authorization: `Bearer ${token}` },
           }
-          console.log(response);
-          login(response.data, jwtToken);
-          // login(userData, token);
-          // setAuth((prev) => ({
-          //   ...prev,
-          //   isAuthenticated: true,
-          //   user: response.data,
-          // }));
-        } catch (error) {
-          console.error("Error during auth check:", error);
-          setAuth({ isAuthenticated: false, user: null, token: null });
-          setError("Failed to load user data.");
-        }
-      };
+        );
+        console.log("resp", response);
+        login(response.data, token);
+        setError(null);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+      }
+    };
 
-      fetchData();
-      // console.error("Token is not available. redirect to login");
-      // setError("Please log in to view your profile.");
-      // navigate("/login");
-      // return;
+    if (tokenFromUrl && !jwtToken) {
+      fetchUserData(tokenFromUrl);
+      const newUrl = window.location.pathname;
+      window.history.replaceState(null, "", newUrl);
+      navigate("/profile");
+    } else if (jwtToken) {
+      fetchUserData(jwtToken);
     }
-  }, [jwtToken, token]);
+  }, [tokenFromUrl, jwtToken]);
+
+  const uploadImage = async () => {
+    if (!image) {
+      alert("Please select an image to upload.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "artramuseum");
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dp5pdktmv/image/upload",
+        data
+      );
+      const imageUrl = res.data.url;
+
+      const updatedUser = await axios.put(
+        "http://localhost:5005/api/auth/update",
+        { photo: imageUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      console.log("after cloudinary upload:", updatedUser);
+      setAuth((prev) => ({
+        ...prev,
+        user: { ...prev.user, ...updatedUser.data },
+      }));
+
+      alert("Profile picture uploaded and updated successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload and update profile picture. Please try again.");
+    }
+  };
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="text-center text-red-500 mt-10">{error}</div>;
   }
 
   if (!auth.token) {
-    return <div>Please log in to view your profile.</div>;
+    return (
+      <div className="text-center text-red-500 mt-10">
+        Please log in to view your profile.
+      </div>
+    );
   }
 
   return (
-    <div className="container border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="container relative border-4 border-pallette-1 mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">
         User Profile
       </h1>
@@ -107,27 +112,28 @@ const UserProfilePage = () => {
         <p className="text-xl font-medium text-pallette-1">
           <strong>Phone:</strong> {auth?.user?.phone}
         </p>
-        <div className="flex justify-center mt-8">
-          {auth.user?.profilePicture && (
+        {auth?.user?.photo && (
+          <div className="flex justify-center mt-8">
             <img
-              src={auth?.user?.profilePicture}
+              src={auth.user.photo}
               alt="Profile"
-              className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-pallette-1"
+              className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-pallette-1"
             />
-          )}
-        </div>
+          </div>
+        )}
       </section>
       <div className="flex justify-center mb-4">
         <input
           type="file"
+          accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
           className="mb-2"
         />
         <button
-          // onClick={uploadImage}
+          onClick={uploadImage}
           className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
         >
-          Upload image
+          Upload Image
         </button>
       </div>
       <div className="flex justify-center mt-8">

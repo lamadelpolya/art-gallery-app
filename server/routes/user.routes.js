@@ -31,12 +31,29 @@ router.get("/users", authMiddleware, async (req, res) => {
 // Example in your backend (assuming Node.js and Express)
 router.put("/update", authMiddleware, async (req, res) => {
   try {
-    const { profilePicture } = req.body;
+    const { name, email, biography, phone, photo } = req.body;
+    let profilePictureUrl;
+
+    // Actualizar los datos del usuario, incluyendo profilePicture solo si se ha subido una nueva imagen
+    const updateFields = {
+      name,
+      email,
+      biography,
+      phone,
+      photo,
+    };
+
+    // if (profilePictureUrl) {
+    //   updateFields.profilePicture = profilePictureUrl;
+    //   updateFields.photo = profilePictureUrl;
+    // }
+
     const updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { profilePicture },
+      req.user._id,
+      updateFields,
       { new: true }
     );
+    console.log("updated....", updatedUser);
     res.json(updatedUser);
   } catch (error) {
     console.error("Update error:", error);

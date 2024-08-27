@@ -10,7 +10,6 @@ const ProfileUpdateForm = () => {
     phone: "",
     profilePicture: null, // to handle file upload
   });
-  console.log(userInfo.biography)
 
   const navigate = useNavigate(); // Initialize the navigate function
 
@@ -18,11 +17,14 @@ const ProfileUpdateForm = () => {
     // Fetch the current user info to populate the form
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get("http://localhost:5005/api/auth/users", {
-          headers: {
-            authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:5005/api/auth/users",
+          {
+            headers: {
+              authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
         setUserInfo({
           name: response.data.name,
           email: response.data.email,
@@ -48,10 +50,14 @@ const ProfileUpdateForm = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    for (let key in userInfo) {
-      formData.append(key, userInfo[key]);
+    formData.append("name", userInfo.name);
+    formData.append("email", userInfo.email);
+    formData.append("biography", userInfo.biography);
+    formData.append("phone", userInfo.phone);
+
+    if (userInfo.profilePicture) {
+      formData.append("profilePicture", userInfo.profilePicture);
     }
-    console.log(formData)
 
     try {
       const response = await axios.put(
@@ -64,9 +70,10 @@ const ProfileUpdateForm = () => {
           },
         }
       );
+
       console.log("Profile updated successfully:", response.data);
       alert("Profile updated successfully!");
-      navigate("/profile"); // Navigate to the profile page
+      navigate("/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");
@@ -74,10 +81,11 @@ const ProfileUpdateForm = () => {
   };
 
   return (
-<div
+    <div
       className="flex items-center w-full h-full justify-center min-h-screen bg-cover bg-center bg-scroll"
       style={{ backgroundImage: `url('/src/assets/back.png')` }}
-    >      <form
+    >
+      <form
         onSubmit={handleSubmit}
         className="bg-pallette-1 p-8 rounded-3xl shadow-lg w-full max-w-md"
       >
@@ -134,18 +142,8 @@ const ProfileUpdateForm = () => {
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-xl text-white font-bold mb-2">
-              Profile Picture
-            </label>
-            <input
-              type="file"
-              name="profilePicture"
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
-            />
-          </div>
-          <div className="flex justify-center">  {/* Center the button */}
+
+          <div className="flex justify-center">
             <button
               type="submit"
               className="border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-11 py-4"

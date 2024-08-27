@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   googleId: { type: String },
   photo: String,
 
-  // profilePicture: { type: String },
+  profilePicture: { type: String },
 });
 
 const User = mongoose.model("User", UserSchema);
