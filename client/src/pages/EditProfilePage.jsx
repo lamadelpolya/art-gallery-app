@@ -8,13 +8,11 @@ const ProfileUpdateForm = () => {
     email: "",
     biography: "",
     phone: "",
-    profilePicture: null, // to handle file upload
   });
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the current user info to populate the form
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get(
@@ -26,10 +24,10 @@ const ProfileUpdateForm = () => {
           }
         );
         setUserInfo({
-          name: response.data.name,
-          email: response.data.email,
-          biography: response.data.biography,
-          phone: response.data.phone,
+          name: response.data.name || "",
+          email: response.data.email || "",
+          biography: response.data.biography || "",
+          phone: response.data.phone || "",
         });
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -39,10 +37,10 @@ const ProfileUpdateForm = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     setUserInfo({
       ...userInfo,
-      [name]: files ? files[0] : value,
+      [name]: value,
     });
   };
 
@@ -50,14 +48,10 @@ const ProfileUpdateForm = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", userInfo.name);
-    formData.append("email", userInfo.email);
-    formData.append("biography", userInfo.biography);
-    formData.append("phone", userInfo.phone);
-
-    if (userInfo.profilePicture) {
-      formData.append("profilePicture", userInfo.profilePicture);
-    }
+    formData.append("name", userInfo.name || "");
+    formData.append("email", userInfo.email || "");
+    formData.append("biography", userInfo.biography || "");
+    formData.append("phone", userInfo.phone || "");
 
     try {
       const response = await axios.put(
@@ -71,7 +65,14 @@ const ProfileUpdateForm = () => {
         }
       );
 
-      console.log("Profile updated successfully:", response.data);
+      // Assuming the updated user data is in response.data
+      setUserInfo({
+        name: response.data.name,
+        email: response.data.email,
+        biography: response.data.biography,
+        phone: response.data.phone,
+      });
+
       alert("Profile updated successfully!");
       navigate("/profile");
     } catch (error) {
@@ -100,7 +101,7 @@ const ProfileUpdateForm = () => {
             <input
               type="text"
               name="name"
-              value={userInfo.name}
+              value={userInfo.name || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               required
@@ -113,7 +114,7 @@ const ProfileUpdateForm = () => {
             <input
               type="email"
               name="email"
-              value={userInfo.email}
+              value={userInfo.email || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
               required
@@ -125,7 +126,7 @@ const ProfileUpdateForm = () => {
             </label>
             <textarea
               name="biography"
-              value={userInfo.biography}
+              value={userInfo.biography || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             />
@@ -137,7 +138,7 @@ const ProfileUpdateForm = () => {
             <input
               type="tel"
               name="phone"
-              value={userInfo.phone}
+              value={userInfo.phone || ""}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             />

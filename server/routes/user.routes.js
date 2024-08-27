@@ -17,10 +17,8 @@ const upload = multer({ storage }); // Initialize multer with memory storage
 
 // Get user details
 router.get("/users", authMiddleware, async (req, res) => {
-  console.log(req.user);
   try {
     const foundUser = await User.findById(req.user._id);
-    console.log(foundUser);
     res.json(foundUser);
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -28,37 +26,58 @@ router.get("/users", authMiddleware, async (req, res) => {
   }
 });
 
-// Example in your backend (assuming Node.js and Express)
-router.put("/update", authMiddleware, async (req, res) => {
-  try {
-    const { name, email, biography, phone, photo } = req.body;
-    let profilePictureUrl;
+// Update user profile
+router.put(
+  "/update",
+  authMiddleware,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const { name, email, biography, phone } = req.body;
+      let photoUrl = req.body.photo;
 
-    // Actualizar los datos del usuario, incluyendo profilePicture solo si se ha subido una nueva imagen
-    const updateFields = {
-      name,
-      email,
-      biography,
-      phone,
-      photo,
-    };
+      // Check if a new file is uploaded
+      if (req.file) {
+        const result = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                folder: "profile_pictures",
+                transformation: [{ width: 300, height: 300, crop: "limit" }],
+              },
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result.url);
+                }
+              }
+            )
+            .end(req.file.buffer);
+        });
 
-    // if (profilePictureUrl) {
-    //   updateFields.profilePicture = profilePictureUrl;
-    //   updateFields.photo = profilePictureUrl;
-    // }
+        photoUrl = result;
+      }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      updateFields,
-      { new: true }
-    );
-    console.log("updated....", updatedUser);
-    res.json(updatedUser);
-  } catch (error) {
-    console.error("Update error:", error);
-    res.status(500).json({ error: "Server error" });
+      const updateFields = {
+        name,
+        email,
+        biography,
+        phone,
+        photo: photoUrl,
+      };
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        updateFields,
+        { new: true }
+      );
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Update error:", error);
+      res.status(500).json({ error: "Server error" });
+    }
   }
-});
+);
 
 module.exports = router;

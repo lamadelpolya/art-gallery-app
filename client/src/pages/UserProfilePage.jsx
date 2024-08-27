@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const UserProfilePage = () => {
   const { auth, login, setAuth } = useAuth();
@@ -21,7 +21,6 @@ const UserProfilePage = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log("resp", response);
         login(response.data, token);
         setError(null);
       } catch (error) {
@@ -32,13 +31,11 @@ const UserProfilePage = () => {
 
     if (tokenFromUrl && !jwtToken) {
       fetchUserData(tokenFromUrl);
-      const newUrl = window.location.pathname;
-      window.history.replaceState(null, "", newUrl);
-      navigate("/profile");
-    } else if (jwtToken) {
+      window.history.replaceState(null, "", window.location.pathname);
+    } else if (jwtToken && !auth.user) {
       fetchUserData(jwtToken);
     }
-  }, [tokenFromUrl, jwtToken]);
+  }, [tokenFromUrl, jwtToken, auth.user, login]);
 
   const uploadImage = async () => {
     if (!image) {
@@ -57,7 +54,7 @@ const UserProfilePage = () => {
       );
       const imageUrl = res.data.url;
 
-      const updatedUser = await axios.put(
+      await axios.put(
         "http://localhost:5005/api/auth/update",
         { photo: imageUrl },
         {
@@ -66,10 +63,10 @@ const UserProfilePage = () => {
           },
         }
       );
-      console.log("after cloudinary upload:", updatedUser);
+
       setAuth((prev) => ({
         ...prev,
-        user: { ...prev.user, ...updatedUser.data },
+        user: { ...prev.user, photo: imageUrl },
       }));
 
       alert("Profile picture uploaded and updated successfully!");
