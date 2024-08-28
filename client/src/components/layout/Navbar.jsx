@@ -164,7 +164,7 @@ const Navbar = () => {
                       alt="User Avatar"
 
                       src={
-                        auth?.user?.profilePicture ||
+                        auth?.user?.photo ||
                         "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                       }
 

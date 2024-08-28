@@ -18,14 +18,8 @@ const upload = multer({ storage });
 
 // Get user details
 router.get("/users", authMiddleware, async (req, res) => {
-  console.log(req.user);
   try {
     const foundUser = await User.findById(req.user._id);
-    console.log(foundUser);
-//     const foundUser = await User.findById(req.user.id);
-//     if (!foundUser) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
     res.json(foundUser);
   } catch (error) {
     console.error("Error fetching user:", error.message);
@@ -33,63 +27,55 @@ router.get("/users", authMiddleware, async (req, res) => {
   }
 });
 
-// Update user details
+// Update user profile
 router.put(
   "/update",
   authMiddleware,
-  upload.single("profilePicture"),
+  upload.single("file"),
   async (req, res) => {
     try {
-      const { name, email, biography, phone, facebook, twitter, instagram, linkedin, street, city, state, zip, country } = req.body;
+      const { name, email, biography, phone } = req.body;
+      let photoUrl = req.body.photo;
 
-      // Handle profile picture upload to Cloudinary if present
-      let profilePictureUrl;
+      // Check if a new file is uploaded
       if (req.file) {
         const result = await new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            {
-              resource_type: "image",
-              folder: "profile_pictures",
-            },
-            (error, result) => {
-              if (result) resolve(result);
-              else reject(error);
-            }
-          );
-          stream.end(req.file.buffer);
+          cloudinary.uploader
+            .upload_stream(
+              {
+                folder: "profile_pictures",
+                transformation: [{ width: 300, height: 300, crop: "limit" }],
+              },
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result.url);
+                }
+              }
+            )
+            .end(req.file.buffer);
         });
-        profilePictureUrl = result.secure_url;
+
+        photoUrl = result;
       }
 
-      // Update user details
+      const updateFields = {
+        name,
+        email,
+        biography,
+        phone,
+        photo: photoUrl,
+      };
+
       const updatedUser = await User.findByIdAndUpdate(
-        req.user.id,
-        {
-          name,
-          email,
-          biography,
-          phone,
-          profilePicture: profilePictureUrl || req.body.profilePicture,
-          socialLinks: {
-            facebook,
-            twitter,
-            instagram,
-            linkedin,
-          },
-          address: {
-            street,
-            city,
-            state,
-            zip,
-            country,
-          },
-        },
+        req.user._id,
+        updateFields,
         { new: true }
       );
-
       res.json(updatedUser);
     } catch (error) {
-      console.error("Update error:", error.message);
+      console.error("Update error:", error);
       res.status(500).json({ error: "Server error" });
     }
   }
