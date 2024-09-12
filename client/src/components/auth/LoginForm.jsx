@@ -29,19 +29,19 @@ const LoginForm = () => {
 
       const data = await response.json();
       if (!response.ok) {
-        setError(data.message);
+        setError(data.message || "Failed to login. Please try again.");
         return;
       }
 
       localStorage.setItem("token", data.token); // Save token to localStorage
       navigate("/profile"); // Navigate to user profile page
     } catch (error) {
-      setError(error.message);
+      setError("An error occurred. Please check your internet connection.");
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "/api/auth/google"; // URL para autenticación con Google
+    window.location.href = "/api/auth/google"; // Redirect for Google login/registration
   };
 
   return (
@@ -51,11 +51,9 @@ const LoginForm = () => {
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-pallette-1 p-8 rounded-3xl border-4 border-white  shadow-lg w-full max-w-md"
+        className="bg-pallette-1 p-8 rounded-3xl border-4 border-white shadow-lg w-full max-w-md"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center text-white">
-          Login
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">Login</h2>
         <div className="mb-4">
           <label className="block text-xl text-white font-bold mb-2">
             Email <sup className="text-red-500">*</sup>
@@ -99,7 +97,7 @@ const LoginForm = () => {
             onClick={handleGoogleLogin}
             className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Login with Google
+            Login/Register with Google
           </button>
         </div>
       </form>

@@ -9,30 +9,32 @@ export function AuthProvider({ children }) {
     user: null,
     token: localStorage.getItem("token"),
   });
+  const [loading, setLoading] = useState(true);  // New state to handle loading
 
   useEffect(() => {
     const checkAuth = async () => {
       const token = auth.token;
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:5005/api/auth/users",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get("http://localhost:5005/api/auth/users", {
+            headers: {
+              Authorization: `Bearer ${token}`,  // Ensure correct token is being sent
+            },
+          });
+
+          // If request succeeds, update the auth state
           setAuth({
             isAuthenticated: true,
             user: response.data,
             token,
           });
         } catch (error) {
+          console.error("Failed to fetch user profile:", error.response?.data || error.message);
           setAuth({ isAuthenticated: false, user: null, token: null });
           localStorage.removeItem("token");
         }
       }
+      setLoading(false);  // Set loading to false after request completes
     };
 
     checkAuth();
@@ -56,27 +58,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
-  const refreshUserData = async () => {
-    if (auth.token) {
-      try {
-        const response = await axios.get("http://localhost:5005/api/auth/users", {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        });
-        setAuth((prev) => ({
-          ...prev,
-          user: response.data,
-        }));
-      } catch (error) {
-        console.error("Failed to refresh user data:", error);
-      }
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{ auth, setAuth, login, logout, refreshUserData }}>
-      {children}
+    <AuthContext.Provider value={{ auth, login, logout }}>
+      {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 }
