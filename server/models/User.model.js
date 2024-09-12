@@ -9,9 +9,6 @@ const UserSchema = new mongoose.Schema({
   role: { type: String },
   googleId: { type: String },
   photo: String,
-
-  profilePicture: { type: String },
 });
-
 
 module.exports = mongoose.model("User", UserSchema);
