@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
 
 const ProfileUpdateForm = () => {
-  const { auth, setAuth } = useContext(AuthContext); // Access AuthContext
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -58,11 +55,10 @@ const ProfileUpdateForm = () => {
     try {
       const response = await axios.put(
         "http://localhost:5005/api/auth/update",
-        formData,
+        updatedData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-            authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: `Bearer ${auth.token}`,
           },
         }
       );
@@ -159,5 +155,6 @@ const ProfileUpdateForm = () => {
     </div>
   );
 };
+
 
 export default ProfileUpdateForm;

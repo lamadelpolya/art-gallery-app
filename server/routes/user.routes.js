@@ -5,14 +5,16 @@ const User = require("../models/User.model");
 const authMiddleware = require("../middleware/auth.middleware");
 const router = express.Router();
 
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const storage = multer.memoryStorage(); // Use memory storage
-const upload = multer({ storage }); // Initialize multer with memory storage
+// Set up multer storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Get user details
 router.get("/users", authMiddleware, async (req, res) => {
@@ -20,7 +22,7 @@ router.get("/users", authMiddleware, async (req, res) => {
     const foundUser = await User.findById(req.user._id);
     res.json(foundUser);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("Error fetching user:", error.message);
     res.status(500).json({ error: "Failed to fetch user data" });
   }
 });

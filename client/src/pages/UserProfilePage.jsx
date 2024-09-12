@@ -6,7 +6,6 @@ import { useAuth } from "../hooks/useAuth";
 const UserProfilePage = () => {
   const { auth, login, setAuth } = useAuth();
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
