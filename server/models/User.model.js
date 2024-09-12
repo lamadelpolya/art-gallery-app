@@ -32,9 +32,7 @@ const UserSchema = new mongoose.Schema({
   role: { type: String },
   googleId: { type: String },
   photo: String,
-
-  profilePicture: { type: String },
 });
 
-const User = mongoose.model("User", UserSchema);
-module.exports = User;
+module.exports = mongoose.model("User", UserSchema);
+

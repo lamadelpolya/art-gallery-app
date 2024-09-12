@@ -15,14 +15,17 @@ passport.use(
       const photo = photos[0].value;
 
       try {
+        // Check if user already exists
         let user = await User.findOne({ googleId: id });
 
+        // If user doesn't exist, create a new one (registration)
         if (!user) {
           user = await User.create({
             googleId: id,
             name: displayName,
             email,
-            photo, // Guarda la URL de la foto
+            photo, // Save Google profile photo
+            role: "user", // Assign default role
           });
         }
 
