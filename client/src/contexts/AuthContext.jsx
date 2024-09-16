@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
   });
   const [loading, setLoading] = useState(true);  // New state to handle loading
 
+
   useEffect(() => {
     const checkAuth = async () => {
       const token = auth.token;
