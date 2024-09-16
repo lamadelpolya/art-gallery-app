@@ -94,6 +94,29 @@ const UserProfilePage = () => {
       <h1 className="text-6xl text-center text-pallette-1 font-bold mb-8">
         User Profile
       </h1>
+      {auth?.user?.photo && (
+        <div className="flex justify-start mt-8">
+          <img
+            src={auth.user.photo}
+            alt="Profile"
+            className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-pallette-1"
+          />
+        </div>
+      )}
+      {/* <div className="flex justify-center mb-4">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          className="mb-2"
+        />
+        <button
+          onClick={uploadImage}
+          className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
+        >
+          Upload Image
+        </button>
+      </div> */}
       <section className="mb-12">
         <h2 className="text-3xl text-pallette-1 font-bold mb-4">
           Personal Information
@@ -110,7 +133,7 @@ const UserProfilePage = () => {
         <p className="text-xl font-medium text-pallette-1">
           <strong>Phone:</strong> {auth?.user?.phone}
         </p>
-        {auth?.user?.photo && (
+        {/* {auth?.user?.photo && (
           <div className="flex justify-center mt-8">
             <img
               src={auth.user.photo}
@@ -118,9 +141,9 @@ const UserProfilePage = () => {
               className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-pallette-1"
             />
           </div>
-        )}
+        )} */}
       </section>
-      <div className="flex justify-center mb-4">
+      {/* <div className="flex justify-center mb-4">
         <input
           type="file"
           accept="image/*"
@@ -133,7 +156,7 @@ const UserProfilePage = () => {
         >
           Upload Image
         </button>
-      </div>
+      </div> */}
       <div className="flex justify-center mt-8">
         <button
           onClick={() => navigate("/edit-profile")}

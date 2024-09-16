@@ -96,6 +96,7 @@ const ProfileUpdateForm = () => {
           <h2 className="text-3xl font-bold mb-6 text-center text-white">
             Update Profile
           </h2>
+          
           <div className="mb-4">
             <label className="block text-xl text-white font-bold mb-2">
               Name <sup className="text-red-500">*</sup>

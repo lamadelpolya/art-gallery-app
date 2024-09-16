@@ -8,7 +8,7 @@ function Footer() {
         <p>&copy; {new Date().getFullYear()} ARTRA. All rights reserved.</p>
         <div className="mt-2">
           <Link to="/aboutus" className="text-pallette-100 text-lg mx-2">
-            About Us
+            Contacts
           </Link>
         </div>
       </div>

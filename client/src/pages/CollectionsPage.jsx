@@ -11,7 +11,7 @@ const CollectionsPage = () => {
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const navigate = useNavigate(); // Reemplazo de useHistory
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -65,39 +65,42 @@ const CollectionsPage = () => {
   }
 
   return (
-    <div className="relative">
-      <div className="container mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="min-h-screen flex flex-col justify-between bg-white">
+      {/* Header Section */}
+      <div className="flex flex-col items-center">
+        <div className="text-center text-[#2a3d45] text-[60px] sm:text-[90px] font-normal font-['Work Sans'] mx-auto">EXPLORE</div>
+        <div className="text-center text-[#2a3d45] text-[60px] sm:text-[90px] font-normal font-['Work Sans'] mx-auto mb-10">ART</div>
+      </div>
+
+      {/* Search and Artworks Section */}
+      <div className="container mx-auto my-10 p-6 rounded-lg">
         <input
           type="text"
           placeholder="Search artworks..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="input input-bordered w-full mb-6"
+          className="input input-bordered w-full mb-6 border-2 border-[#22333b] p-2"
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-10">
           {filteredArtworks.map((artwork) => (
             <div
               key={artwork.id}
-              className="p-4 rounded-3xl shadow-md cursor-pointer"
-              style={{ backgroundColor: colorCustomRed }}
+              className="flex flex-col items-center p-4 rounded-[40px] border-2 border-[#22333b] cursor-pointer"
               onClick={() => handleArtworkClick(artwork)}
             >
               <img
                 src={`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`}
                 alt={artwork.title}
-                className="w-full object-cover rounded-xl border-8 border-white mb-4"
+                className="w-full max-w-[412px] h-[469px] rounded-tl-[30px] rounded-tr-[30px] border border-[#22333b] object-cover mb-4"
               />
-              <h3 className="text-2xl text-white text-center font-bold mb-2">
-                {artwork.title}
-              </h3>
-              <p className="text-white text-xl text-center mb-4">
-                {artwork.artist_title}
-              </p>
+              <h3 className="text-[18px] sm:text-[25px] text-center text-[#2a3d45] font-medium font-['Work Sans']">{artwork.title}</h3>
+              <p className="text-[18px] sm:text-[25px] text-center text-[#2a3d45] font-medium font-['Work Sans']">{artwork.artist_title}</p>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Modal Section */}
       {selectedArtwork && (
         <div
           className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
@@ -136,6 +139,9 @@ const CollectionsPage = () => {
           </div>
         </div>
       )}
+
+      {/* Footer Section */}
+      
     </div>
   );
 };
