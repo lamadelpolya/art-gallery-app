@@ -1,20 +1,16 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  let token = "";
+  let token;
 
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer ")
   ) {
-    token = req.headers.authorization.replace("Bearer ", "");
+    token = req.headers.authorization.split(" ")[1];
+    console.log("Token received by backend: ", token);  // Add this log
   } else {
     console.log("Authorization header missing or improperly formatted");
-    return res.status(401).json({ message: "No token, authorization denied" });
-  }
-
-  if (!token) {
-    console.log("No token provided");
     return res.status(401).json({ message: "No token, authorization denied" });
   }
 
