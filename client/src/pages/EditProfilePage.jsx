@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ProfileUpdateForm = () => {
   const [userInfo, setUserInfo] = useState({
@@ -8,20 +9,25 @@ const ProfileUpdateForm = () => {
     biography: "",
     phone: "",
   });
-
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Fetch user info on page load
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5005/api/auth/users",
-          {
-            headers: {
-              authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          }
-        );
+        const token = localStorage.getItem("token"); // Get token from localStorage
+
+        if (!token) {
+          throw new Error("Authorization token not found.");
+        }
+
+        const response = await axios.get("http://localhost:5005/api/auth/users", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token to the request
+          },
+        });
+
         setUserInfo({
           name: response.data.name || "",
           email: response.data.email || "",
@@ -30,11 +36,14 @@ const ProfileUpdateForm = () => {
         });
       } catch (error) {
         console.error("Error fetching user info:", error);
+        setError("Failed to load user information. Please try again.");
       }
     };
+
     fetchUserInfo();
   }, []);
 
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserInfo({
@@ -43,41 +52,51 @@ const ProfileUpdateForm = () => {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Authorization token not found. Please log in again.");
+      return;
+    }
+  
+    console.log("Token being sent: ", token);  // Log the token before the request
+  
     const formData = new FormData();
     formData.append("name", userInfo.name || "");
     formData.append("email", userInfo.email || "");
     formData.append("biography", userInfo.biography || "");
     formData.append("phone", userInfo.phone || "");
-
+  
     try {
       const response = await axios.put(
         "http://localhost:5005/api/auth/update",
-        updatedData,
+        formData,
         {
           headers: {
-            Authorization: `Bearer ${auth.token}`,
+            Authorization: `Bearer ${token}`,  // Send the token here
+            "Content-Type": "multipart/form-data",  // Form data type
           },
         }
       );
-
-      // Assuming the updated user data is in response.data
+  
       setUserInfo({
         name: response.data.name,
         email: response.data.email,
         biography: response.data.biography,
         phone: response.data.phone,
       });
-
+  
       alert("Profile updated successfully!");
       navigate("/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      setError("Failed to update profile. Please try again.");
     }
   };
+  
 
   return (
     <div
@@ -92,7 +111,7 @@ const ProfileUpdateForm = () => {
           <h2 className="text-3xl font-bold mb-6 text-center text-white">
             Update Profile
           </h2>
-          
+
           <div className="mb-4">
             <label className="block text-xl text-white font-bold mb-2">
               Name <sup className="text-red-500">*</sup>
@@ -106,6 +125,7 @@ const ProfileUpdateForm = () => {
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-xl text-white font-bold mb-2">
               Email <sup className="text-red-500">*</sup>
@@ -119,6 +139,7 @@ const ProfileUpdateForm = () => {
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-xl text-white font-bold mb-2">
               Biography
@@ -130,6 +151,7 @@ const ProfileUpdateForm = () => {
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-xl text-white font-bold mb-2">
               Phone
@@ -142,6 +164,8 @@ const ProfileUpdateForm = () => {
               className="w-full px-4 py-2 border rounded-lg text-black focus:outline-none"
             />
           </div>
+
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <div className="flex justify-center">
             <button
@@ -156,6 +180,5 @@ const ProfileUpdateForm = () => {
     </div>
   );
 };
-
 
 export default ProfileUpdateForm;

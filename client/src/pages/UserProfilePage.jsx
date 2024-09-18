@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 
@@ -8,19 +8,14 @@ const UserProfilePage = () => {
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const tokenFromUrl = searchParams.get("token");
-  const jwtToken = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchUserData = async (token) => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5005/api/auth/users",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get("http://localhost:5005/api/auth/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         login(response.data, token);
         setError(null);
       } catch (error) {
@@ -29,13 +24,10 @@ const UserProfilePage = () => {
       }
     };
 
-    if (tokenFromUrl && !jwtToken) {
-      fetchUserData(tokenFromUrl);
-      window.history.replaceState(null, "", window.location.pathname);
-    } else if (jwtToken && !auth.user) {
-      fetchUserData(jwtToken);
+    if (token && !auth.user) {
+      fetchUserData();
     }
-  }, [tokenFromUrl, jwtToken, auth.user, login]);
+  }, [token, auth.user, login]);
 
   const uploadImage = async () => {
     if (!image) {
@@ -102,20 +94,6 @@ const UserProfilePage = () => {
           />
         </div>
       )}
-      {/* <div className="flex justify-center mb-4">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          className="mb-2"
-        />
-        <button
-          onClick={uploadImage}
-          className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
-        >
-          Upload Image
-        </button>
-      </div> */}
       <section className="mb-12">
         <h2 className="text-3xl text-pallette-1 font-bold mb-4">
           Personal Information
@@ -132,30 +110,7 @@ const UserProfilePage = () => {
         <p className="text-xl font-medium text-pallette-1">
           <strong>Phone:</strong> {auth?.user?.phone}
         </p>
-        {/* {auth?.user?.photo && (
-          <div className="flex justify-center mt-8">
-            <img
-              src={auth.user.photo}
-              alt="Profile"
-              className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-pallette-1"
-            />
-          </div>
-        )} */}
       </section>
-      {/* <div className="flex justify-center mb-4">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          className="mb-2"
-        />
-        <button
-          onClick={uploadImage}
-          className="ml-4 border border-white rounded-[60px] hover:bg-gray-700 bg-pallette-1 text-white text-[25px] font-semibold px-10 py-4"
-        >
-          Upload Image
-        </button>
-      </div> */}
       <div className="flex justify-center mt-8">
         <button
           onClick={() => navigate("/edit-profile")}
